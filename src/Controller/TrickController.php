@@ -20,4 +20,17 @@ class TrickController extends AbstractController
             'tricks' => $tricks
         ]);
     }
+
+    
+    /**
+     * @Route("/trick/{slug}", name="trick_show")
+     */
+    public function show(TrickRepository $repo, $slug)
+    {
+        $trick = $repo->findOneBySlug($slug);
+        
+        return $this->render('trick/show.html.twig', [
+            'trick' => $trick
+        ]);
+    }
 }

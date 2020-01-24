@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ trick.name }}{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="jumbotron jumb-show text-center vertical-center" style="background-image: url('{{ trick.imageMain }}')">
+        <h1 class="text-center">{{ trick.name }}</h1>
+    </div>
+
+    <div class="row my-4">
+    {% for img in trick.images %}
+        <img class="col-md-2" src="{{ img.filename }}" alt="" style="height: 200px; width: 100%; display: block">
+    {% endfor %}
+    </div>
+
+    <div class="row">
+        <h2 class="col-12">Description</h2>
+        <p class="col-12"> {{ trick.description | raw }}</p>
+    </div>
+    <div class="row">
+        <div class="col"><strong>Créé le {{ trick.createdAt | date('d/m/Y à H:i') }}</strong></div>
+    </div>
+</div>
+{% endblock %}

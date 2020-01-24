@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use Faker\Factory;
+use App\Entity\Image;
 use App\Entity\Trick;
 use Cocur\Slugify\Slugify;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -27,7 +28,18 @@ class AppFixtures extends Fixture
                   ->setDescription($description)
                   ->setCreatedAt(new \DateTime());
 
-                $manager->persist($trick);
+                
+                for ($j = 1; $j <= rand(2, 5); $j++) {
+                    $image = new Image();
+
+                    $image->setFilename($faker->imageUrl())
+                          ->setTrick($trick);
+                    
+                    $manager->persist($image);
+
+                }
+
+            $manager->persist($trick);
         }
 
         $manager->flush();

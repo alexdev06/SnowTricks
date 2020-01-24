@@ -19,14 +19,12 @@ class AppFixtures extends Fixture
         for ($i = 1; $i <= 20; $i++) {
             
             $name = $faker->sentence();
-            $slug = $slugify->slugify($name);
             $description = '<p>' . join('</p><p>',  $faker->paragraphs(5)) . '</p>';
-            
+
             $trick = new Trick();
 
             $trick->setName($name)
                   ->setDescription($description)
-                  ->setSlug($slug)
                   ->setCreatedAt(new \DateTime());
 
                 $manager->persist($trick);

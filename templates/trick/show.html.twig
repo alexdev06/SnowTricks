@@ -18,8 +18,12 @@
         <h2 class="col-12">Description</h2>
         <p class="col-12"> {{ trick.description | raw }}</p>
     </div>
-    <div class="row">
+    <div class="row text-center">
         <div class="col"><strong>Créé le {{ trick.createdAt | date('d/m/Y à H:i') }}</strong></div>
+        <div class="col"><strong>Catégorie : {{ trick.category.name }}</strong></div>
+        {% if trick.modifiedAt %}
+            <div class="col"><strong>Modifié le : {{ trick.modifiedAt | date('d/m/Y à H:i' )}}</strong></div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

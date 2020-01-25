@@ -28,7 +28,6 @@ class TrickController extends AbstractController
     public function show(TrickRepository $repo, $slug)
     {
         $trick = $repo->findOneBySlug($slug);
-        
         return $this->render('trick/show.html.twig', [
             'trick' => $trick
         ]);

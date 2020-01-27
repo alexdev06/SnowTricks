@@ -2,14 +2,15 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Trick;
 use App\Form\TrickType;
 use App\Repository\TrickRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class TrickController extends AbstractController
 {
@@ -48,8 +49,31 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
+            $imageMainFile = $form->get('imageMain')->getData();
+
+            if ($imageMainFile) {
+                $originalFilename = pathinfo($imageMainFile->getClientOriginalName(), PATHINFO_FILENAME);
+
+                $renamedFilename = $trick->getName() . $originalFilename;
+
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '-' . $imageMainFile->guessExtension();
+
+                try {
+                    $imageMainFile->move($this->getParameter('image_directory'), $newFilename);
+
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+            }
             $trick->setCreatedAt(new \DateTime());
+            $trick->setImageMain($newFilename);
+
+            $manager->persist($trick);
+            $manager->flush();
+
+            return $this->redirectToRoute('homepage');
         }
         
         return $this->render('trick/create.html.twig', [

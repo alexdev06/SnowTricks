@@ -1,7 +1,35 @@
-.jumb-show {
-    padding-top: 250px;
-    padding-bottom: 250px;
+.jumbotron-home {
+    background-image: url('../images/head_snow.jpg');
     background-size: cover;
     color: white;
     text-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+    height: 100vh;
+
+
+}
+
+.jumbotron-home h1, .jumbotron-home p {
+    font-weight: 600;
+}
+
+.jumbotron-show {
+    background-size: cover;
+    height: 600px;
+    color: white;
+    text-shadow: 3px 3px 3px rgba(0,0,0,0.5);
+}
+
+.card-class {
+    margin-top: 100px;
+    margin-bottom: 100px;
+
+}
+
+#background-show {
+    background-image: url('../images/head_snow.jpg');
+    background-size: 100% 600px;
+    background-repeat: no-repeat;
+    background-position: top;
+    padding-top: 100px;
+
 }

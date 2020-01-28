@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use DateTime;
+use App\Entity\Image;
 use App\Entity\Trick;
 use App\Form\TrickType;
+use App\Form\ImageType;
 use App\Repository\TrickRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,9 +51,38 @@ class TrickController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $imagesCollection = $form->get('images')->getData();
+
+            foreach ($imagesCollection as $image) {
+
+                if ($image) {
+                    $originalFilename = pathinfo($image->getFile()->getClientOriginalName(), PATHINFO_FILENAME);
+                    $renamedFilename = $trick->getName() . $originalFilename;
+                    
+                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
+                    $newFilename = $safeFilename . '-' . uniqid() . '-' . $image->getFile()->guessExtension();
+                    
+                    try {
+                        $image->getFile()->move($this->getParameter('image_directory'), $newFilename);
+                        
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                    }
+                    
+                }
+                
+                $image->setTrick($trick);
+                $image->setFilename($newFilename); 
+                $manager->persist($image);
+            }
+    
+
             $imageMainFile = $form->get('imageMain')->getData();
 
+
             if ($imageMainFile) {
+  
                 $originalFilename = pathinfo($imageMainFile->getClientOriginalName(), PATHINFO_FILENAME);
 
                 $renamedFilename = $trick->getName() . $originalFilename;
@@ -69,6 +100,7 @@ class TrickController extends AbstractController
             }
             $trick->setCreatedAt(new \DateTime());
             $trick->setImageMain($newFilename);
+            
 
             $manager->persist($trick);
             $manager->flush();

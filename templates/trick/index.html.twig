@@ -17,12 +17,12 @@
 
     {% for trick in tricks %}
         {% if loop.first %}
-        <div class="row justify-content-lg-center">
+        <div class="row">
         {% endif %}
-            <div class="col-lg">
+            <div class="col-lg-2">
                     <div class="card bg-light mb-3">
                         <a href="{{ path('trick_show' , {'slug': trick.slug}) }}">
-                            <img src="{{ trick.imageMain }}" alt="Image du trick {{ trick.name }}" style="height: 200px; width: 100%; display: block">
+                            <img src="/uploads/images/{{ trick.imageMain }}" alt="Image du trick {{ trick.name }}" style="height: 150px; width: 100%; display: block">
                         </a>
                         <div class="card-body">
                             <div class="row">
@@ -35,7 +35,7 @@
                 </div>
         {% if loop.index is divisible by (5) %}
         </div>
-        <div class="row justify-content-md-center">
+        <div class="row">
         {% endif %}
     {% endfor %}
 {# 

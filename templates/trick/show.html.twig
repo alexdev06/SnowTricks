@@ -11,9 +11,14 @@
             </div>
 
             <div class="row my-4">
-            {% for img in trick.images %}
-                <img class="col-md-2" src="/uploads/images/{{ img.filename }}" alt="" style="height: 200px; width: 100%; display: block">
-            {% endfor %}
+                {% for img in trick.images %}
+                    <img class="col-md-3" src="/uploads/images/{{ img.filename }}" alt="" style="height: 200px; width: 100%; display: block" />
+                {% endfor %}
+                {% for video in trick.videos %}
+                    <div class="col-md-3 video-import">
+                        {{ video.url | raw }}
+                    </div>
+                {% endfor %}
             </div>
 
             <h2> Description</h2>
@@ -36,7 +41,7 @@
                 <div class="media col-md-8">
                     <img src="/images/portrait.jpg" class="align-self-center mr-3" alt="..." style="width: 64px; height: 64px; border-radius: 50%">
                     <div class="media-body border p-2 my-2">
-                        <h5 class="mt-0">Par Barack Obama le 15/01/2020 à 12:15:15 :</h5>
+                        <em class="mt-0"><strong>Barack Obama</strong> le 15/01/2020 à 12:15:15 :</em>
                         <div>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</div>
                     </div>
                 </div>
@@ -45,7 +50,7 @@
                 <div class="media col-md-8">
                     <img src="/images/portrait.jpg" class="align-self-center mr-3" alt="..." style="width: 64px; height: 64px; border-radius: 50%">
                     <div class="media-body border p-2 my-2">
-                        <h5 class="mt-0">Par Barack Obama le 15/01/2020 à 12:15:15 :</h5>
+                        <em class="mt-0"><strong>Barack Obama</strong> le 15/01/2020 à 12:15:15 :</em>
                         <div>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</div>
                     </div>
                 </div>
@@ -54,7 +59,7 @@
                 <div class="media col-md-8">
                     <img src="/images/portrait.jpg" class="align-self-center mr-3" alt="..." style="width: 64px; height: 64px; border-radius: 50%">
                     <div class="media-body border p-2 my-2">
-                        <h5 class="mt-0">Par Barack Obama le 15/01/2020 à 12:15:15 :</h5>
+                        <em class="mt-0">Par <strong>Barack Obama</strong> le 15/01/2020 à 12:15:15 :</em>
                         <div>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</div>
                     </div>
                 </div>

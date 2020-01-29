@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Trick;
 use App\Form\ImageType;
+use App\Form\VideoType;
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -50,10 +51,15 @@ class TrickType extends AbstractType
                 'allow_add' => true
             ])
 
+            ->add('videos', CollectionType::class, [
+                'entry_type' => VideoType::class,
+                'allow_add' => true
+            ])
+
             ->add('save', SubmitType::class, [
                 'label' => 'Créer le nouveau trick !',
                 'attr' => [
-                    'class' => 'btn btn-primary'
+                    'class' => 'btn btn-success'
                 ]
             ])
             ;

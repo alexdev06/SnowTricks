@@ -52,6 +52,15 @@ class TrickController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            $videosCollection = $form->get('videos')->getData();
+
+            foreach ($videosCollection as $video) {
+                if ($video) {
+                    $video->setTrick($trick);
+                    $manager->persist($video);
+                }
+            }
+            
             $imagesCollection = $form->get('images')->getData();
 
             foreach ($imagesCollection as $image) {

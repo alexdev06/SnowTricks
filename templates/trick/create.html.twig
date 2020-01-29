@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block _trick_images_widget %} 
-    <p>Ici ajouter vos images</p>
+    <p>Ajouter vos images (facultatif)</p>
 
     {{ form_widget(form) }}
 
@@ -46,6 +46,37 @@
 </div>
 {% endblock %}
 
+{% block _trick_videos_widget %} 
+    <p>Ajouter vos liens vers des videos (facultatif)</p>
+
+    {{ form_widget(form) }}
+
+    <div class="form-group">
+        <button type="button" id="add-video" class="btn btn-primary">Ajouter une video</button>
+    </div>
+{% endblock %}
+
+{% block _trick_videos_entry_row %}
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block _trick_videos_entry_widget %}
+<div class="form-group" id="block_{{id}}">
+    <div class="row">
+        <div class="col-10">
+            <div class="row">
+                <div class="col">
+                    {{ form_widget(form.url) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <button type="button" data-action="delete" data-target="#block_{{id}}" class=" btn btn-danger">X</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
 {% block javascripts %}
 <script>
     $('#add-image').click(function(){
@@ -54,6 +85,17 @@
         const tmpl = $('#trick_images').data('prototype').replace(/__name__/g, index);
 
         $('#trick_images').append(tmpl);
+
+        handleDeleteButtons()
+       
+    });
+
+        $('#add-video').click(function(){
+        const index = $('#trick_videos div.form-group').length;
+
+        const tmpl = $('#trick_videos').data('prototype').replace(/__name__/g, index);
+
+        $('#trick_videos').append(tmpl);
 
         handleDeleteButtons()
        

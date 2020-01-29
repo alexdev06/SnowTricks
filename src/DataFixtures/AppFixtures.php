@@ -9,9 +9,17 @@ use App\Entity\Trick;
 use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
 {
+    private $encoder;
+
+    public function __construct(UserPasswordEncoderInterface $encoder)
+    {
+        $this->encoder = $encoder;
+    }
+
     public function load(ObjectManager $manager)
     {
         $faker = Factory::create('fr-FR');
@@ -21,7 +29,7 @@ class AppFixtures extends Fixture
             $firstName = $faker->firstname;
             $lastName = $faker->lastname;
             $email = $faker->email;
-            $passwordHash = 'password';
+            $passwordHash = $this->encoder->encodePassword($user, 'password');
 
             $male = 'https://randomuser.me/api/portraits/men';
             $female = 'https://randomuser.me/api/portraits/women/';

@@ -3,11 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class User
+class User implements UserInterface
 {
     /**
      * @ORM\Id()
@@ -34,7 +35,7 @@ class User
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $password_hash;
+    private $passwordHash;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -84,12 +85,12 @@ class User
 
     public function getPasswordHash(): ?string
     {
-        return $this->password_hash;
+        return $this->passwordHash;
     }
 
-    public function setPasswordHash(string $password_hash): self
+    public function setPasswordHash(string $passwordHash): self
     {
-        $this->password_hash = $password_hash;
+        $this->passwordHash = $passwordHash;
 
         return $this;
     }
@@ -105,4 +106,30 @@ class User
 
         return $this;
     }
+
+    public function getRoles()
+    {
+        return ['ROLE_USER'];
+    }
+
+    public function getPassword()
+    {
+        return $this->passwordHash;
+    }
+
+    public function getUsername()
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials()
+    {
+        
+    }
+
+    public function getSalt()
+    {
+        
+    }
 }
+

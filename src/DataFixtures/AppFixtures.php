@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use Faker\Factory;
+use App\Entity\User;
 use App\Entity\Image;
 use App\Entity\Trick;
 use App\Entity\Category;
@@ -15,10 +16,40 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create('fr-FR');
 
+        for ($k = 1; $k <= 10; $k++) {
+            $user = new User();
+            $firstName = $faker->firstname;
+            $lastName = $faker->lastname;
+            $email = $faker->email;
+            $passwordHash = 'password';
+
+            $male = 'https://randomuser.me/api/portraits/men';
+            $female = 'https://randomuser.me/api/portraits/women/';
+
+            $sexe = mt_rand(1,2);
+            if ($sexe == 1) {
+                $genre = $male;
+            } else {
+                $genre = $female;
+            }
+
+            $person = mt_rand(1,99);
+
+            $avatar = $genre . $person . '.jpg';
+
+            $user->setFirstName($firstName)
+                 ->setLastName($lastName)
+                 ->setEmail($email)
+                 ->setPasswordHash($passwordHash)
+                 ->setAvatar($avatar);
+
+            $manager->persist($user);
+        }
+
         for ($h = 1; $h <= 5; $h++) {
             $category = new Category();
 
-            $name = $faker->words(mt_rand(1,5), true);
+            $name = $faker->words(mt_rand(1,3), true);
             $description = '<p>' . join('</p><p>',  $faker->paragraphs(5)) . '</p>';
 
             $category->setName($name)

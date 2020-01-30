@@ -67,10 +67,10 @@ class TrickController extends AbstractController
 
                 if ($image) {
                     $originalFilename = pathinfo($image->getFile()->getClientOriginalName(), PATHINFO_FILENAME);
-                    $renamedFilename = $trick->getName() . $originalFilename;
+                    $renamedFilename = 'avatar' . '_' . $trick->getName() . '_' . $originalFilename;
                     
                     $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
-                    $newFilename = $safeFilename . '-' . uniqid() . '-' . $image->getFile()->guessExtension();
+                    $newFilename = $safeFilename . '_' . uniqid() . '_' . $image->getFile()->guessExtension();
                     
                     try {
                         $image->getFile()->move($this->getParameter('image_directory'), $newFilename);
@@ -94,10 +94,10 @@ class TrickController extends AbstractController
   
                 $originalFilename = pathinfo($imageMainFile->getClientOriginalName(), PATHINFO_FILENAME);
 
-                $renamedFilename = $trick->getName() . $originalFilename;
+                $renamedFilename = $trick->getName() . '_' . $originalFilename;
 
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '-' . $imageMainFile->guessExtension();
+                $newFilename = $safeFilename . '_' . uniqid() . '_' . $imageMainFile->guessExtension();
 
                 try {
                     $imageMainFile->move($this->getParameter('image_directory'), $newFilename);

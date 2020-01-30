@@ -4,9 +4,14 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+Use Symfony\Component\Validator\Constraints as Assert;
+Use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(
+ * fields={"email"},
+ * message="L'email est déjà utilisé !")
  */
 class User implements UserInterface
 {
@@ -19,26 +24,40 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, minMessage = "Votre prénom doit faire au moins 2 caractères !")
+     * 
      */
     private $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank()
+     * @Assert\Length(min = 2, minMessage = "Votre nom doit faire au moins 2 caractères !")
      */
     private $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(message="Veuillez renseigner un email valide !")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min = 6, minMessage = "Votre mot de passe doit faire au moins 6 caractères !")
      */
     private $passwordHash;
 
     /**
+     * @Assert\EqualTo(propertyPath="passwordHash", message="Les mots de passe sont différents !")
+     */
+    public $passwordConfirm;
+
+    /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Image(maxSize = "2M", maxSizeMessage="Le fichier image ne doit pas dépasser 2Mo !")
+     *  
      */
     private $avatar;
 

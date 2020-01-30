@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
+
 class RegistrationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -27,7 +28,7 @@ class RegistrationType extends AbstractType
                 'label' => 'Votre nom',
                 'attr' =>
                 [
-                    'placeholder' => 'Prénom'
+                    'placeholder' => 'Nom'
                 ]
             ])
             ->add('email', EmailType::class, [
@@ -40,6 +41,12 @@ class RegistrationType extends AbstractType
                 'label' => 'Votre mot de passe',
                 'attr' => [
                     'placeholder' => 'Mot de passe'
+                ]
+            ])
+            ->add('passwordConfirm', PasswordType::class, [
+                'label' => 'Confirmez votre mot de passe',
+                'attr' => [
+                    'placeholder' => 'Confirmation du mot de passe'
                 ]
             ])
             ->add('avatar', FileType::class, [

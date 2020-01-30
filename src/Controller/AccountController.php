@@ -70,6 +70,8 @@ class AccountController extends AbstractController
 
             $manager->persist($user);
             $manager->flush();
+
+            return $this->redirectToRoute('account_login');
         }
 
         return $this->render('account/register.html.twig', [

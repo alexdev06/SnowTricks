@@ -11,3 +11,12 @@
     {{ form_end(form)}}
 </div>
 {% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).on('change', '.custom-file-input', function () {
+        let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+        $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+    });
+</script>
+{% endblock %}

@@ -51,7 +51,7 @@ class RegistrationType extends AbstractType
             ])
             ->add('avatar', FileType::class, [
                 'required' => false,
-                'label' => 'Votre photo de profile.'
+                'label' => 'Votre photo de profile'
             ])
         ;
     }

@@ -37,4 +37,10 @@
  .video-import iframe {
      height: 200px;
      width: 100%;
+     box-shadow: 5px 5px 5px grey;
+ }
+
+ .content-box {
+    box-shadow: 3px 3px 30px;
+    padding: 15px;
  }

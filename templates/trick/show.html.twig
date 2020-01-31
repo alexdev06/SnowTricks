@@ -22,7 +22,8 @@
             </div>
 
             <h2> Description</h2>
-            <p>{{ trick.description | raw }}</p>
+            
+            <p>{{ trick.description }}</p>
             
             <div class="row text-center">
                 <div class="col"><strong>Créé le : {{ trick.createdAt | date('d/m/Y à H:i') }}</strong></div>
@@ -36,35 +37,24 @@
         <hr />
 
         {# Affichage des commentaires : #}
-        <div class="comments-list">
-            <div class="row justify-content-md-center">
-                <div class="media col-md-8">
-                    <img src="/images/portrait.jpg" class="align-self-center mr-3" alt="..." style="width: 64px; height: 64px; border-radius: 50%">
-                    <div class="media-body border p-2 my-2">
-                        <em class="mt-0"><strong>Barack Obama</strong> le 15/01/2020 à 12:15:15 :</em>
-                        <div>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</div>
+        {% if trick.comments | length > 0%}
+            <div class="comments-list">
+                <h3>Les commentaires :</h3>
+            {% for comment in trick.comments %}
+                <div class="row justify-content-md-center">
+                    <div class="media col-md-8">
+                        <img src="{{ comment.user.avatar }}" class="align-self-center mr-3" alt="..." style="width: 64px; height: 64px; border-radius: 50%">
+                        <div class="media-body border p-2 my-2">
+                            <em class="mt-0"><strong>{{ comment.user.fullName }}</strong> le {{ comment.createdAt | date('d/m/Y à H:i') }} :</em>
+                            <div>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row justify-content-md-center">
-                <div class="media col-md-8">
-                    <img src="/images/portrait.jpg" class="align-self-center mr-3" alt="..." style="width: 64px; height: 64px; border-radius: 50%">
-                    <div class="media-body border p-2 my-2">
-                        <em class="mt-0"><strong>Barack Obama</strong> le 15/01/2020 à 12:15:15 :</em>
-                        <div>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</div>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-md-center">
-                <div class="media col-md-8">
-                    <img src="/images/portrait.jpg" class="align-self-center mr-3" alt="..." style="width: 64px; height: 64px; border-radius: 50%">
-                    <div class="media-body border p-2 my-2">
-                        <em class="mt-0">Par <strong>Barack Obama</strong> le 15/01/2020 à 12:15:15 :</em>
-                        <div>Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            {% endfor %}
+        {% else %}
+            <h3>Pas encore de commentaire !</h3>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

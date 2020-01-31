@@ -109,6 +109,7 @@ class TrickController extends AbstractController
             }
             $trick->setCreatedAt(new \DateTime());
             $trick->setImageMain($newFilename);
+            $trick->setUser($this->getUser());
             
 
             $manager->persist($trick);

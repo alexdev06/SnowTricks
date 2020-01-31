@@ -33,14 +33,14 @@ class AppFixtures extends Fixture
 
             $category->setName($name)
                      ->setDescription($description);
-            for ($k = 1; $k <= 10; $k++) {
+            for ($k = 1; $k <= 5; $k++) {
                 $user = new User();
                 $firstName = $faker->firstname;
                 $lastName = $faker->lastname;
                 $email = $faker->email;
                 $passwordHash = $this->encoder->encodePassword($user, 'password');
 
-                $male = 'https://randomuser.me/api/portraits/men';
+                $male = 'https://randomuser.me/api/portraits/men/';
                 $female = 'https://randomuser.me/api/portraits/women/';
 
                 $sexe = mt_rand(1,2);
@@ -85,14 +85,13 @@ class AppFixtures extends Fixture
                         }
         
                         if (mt_rand(0,1)) {
-                            for ($l = 1; $l <= rand(1,4); $l++){
-                                $comment = new Comment();
-                                $comment->setContent($faker->paragraph())
-                                ->setUser($user)
-                                ->setTrick($trick);
-        
-                                $manager->persist($comment);
-                            }
+                            $comment = new Comment();
+                            $comment->setContent($faker->paragraph())
+                            ->setUser($user)
+                            ->setTrick($trick);
+    
+                            $manager->persist($comment);
+                            
                         }
                         $manager->persist($trick);
                     }

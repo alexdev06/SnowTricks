@@ -67,7 +67,7 @@ class TrickController extends AbstractController
 
                 if ($image) {
                     $originalFilename = pathinfo($image->getFile()->getClientOriginalName(), PATHINFO_FILENAME);
-                    $renamedFilename = 'avatar' . '_' . $trick->getName() . '_' . $originalFilename;
+                    $renamedFilename = $trick->getName() . '_' . $originalFilename;
                     
                     $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
                     $newFilename = $safeFilename . '_' . uniqid() . '_' . $image->getFile()->guessExtension();

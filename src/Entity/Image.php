@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+Use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
+ * 
  */
 class Image
 {
@@ -28,7 +30,9 @@ class Image
      */
     private $trick;
 
+
     private $file;
+
 
     public function getFile()
     {

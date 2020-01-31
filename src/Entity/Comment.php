@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Comment
 {
@@ -18,6 +20,7 @@ class Comment
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $createdAt;
 
@@ -89,5 +92,15 @@ class Comment
         $this->user = $user;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePersist()
+    {
+        if(empty($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+Use Symfony\Component\Validator\Constraints as Assert; 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
@@ -26,6 +27,7 @@ class Comment
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min = 10, minMessage = "Le message doit faire au moins 10 caractères !")
      */
     private $content;
 

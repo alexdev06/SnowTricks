@@ -61,6 +61,7 @@ class User implements UserInterface
      */
     private $avatar;
 
+    
     public function getId(): ?int
     {
         return $this->id;

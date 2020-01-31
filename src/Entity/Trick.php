@@ -6,9 +6,14 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+Use Symfony\Component\Validator\Constraints as Assert;
+Use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
+ * @UniqueEntity(
+ * fields={"name"},
+ * message="Le trick est déjà enregistré !")
  * @ORM\HasLifecycleCallbacks
  */
 class Trick
@@ -22,11 +27,16 @@ class Trick
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min = 2, minMessage = "Le nom du trick doit faire au moins 2 caractères !")
+     * @Assert\Length(max = 20, maxMessage = "Le nom du trick ne doit pas faire plus de 20 caractères !")
+     * 
+     * 
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
+     * @Assert\Length(min = 10, minMessage = "La description du trick doit faire au moins 10 caractères !")
      */
     private $description;
 
@@ -41,18 +51,21 @@ class Trick
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="trick", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="trick", orphanRemoval=true)  
+     * 
      */
     private $images;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Assert\Image(maxSize = "2M", maxSizeMessage="Le fichier image ne doit pas dépasser 2Mo !")
      */
     private $imageMain;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="tricks")
      * @ORM\JoinColumn(nullable=false)
+     * 
      */
     private $category;
 

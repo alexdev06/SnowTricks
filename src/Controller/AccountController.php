@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -39,7 +41,7 @@ class AccountController extends AbstractController
     /**
      * @Route("/register", name="account_register")
      */
-    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
+    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, MailerInterface $mailer)
     {
         $user = new User();
 
@@ -71,6 +73,19 @@ class AccountController extends AbstractController
             $manager->persist($user);
             $manager->flush();
 
+            //Confirmation email sending
+            $email = new Email();
+            $email->from('snowtricks@gmail.com')
+                  ->to($user->getEmail())
+                    //->cc('cc@example.com')
+                    //->bcc('bcc@example.com')
+                    //->replyTo('fabien@example.com')
+                    //->priority(Email::PRIORITY_HIGH)
+                   ->subject('Confirmation de l\'inscription sur SnowTricks')
+                   ->text('Bonjour, nous vous confirmons la création de votre compte sur SnowTricks !')
+            ;
+
+            $sentEmail = $mailer->send($email);
             return $this->redirectToRoute('account_login');
         }
 

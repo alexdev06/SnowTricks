@@ -40,6 +40,18 @@
      box-shadow: 5px 5px 5px grey;
  }
 
+ .carousel-item {
+     height: 60vh;
+ }
+ .carousel-item iframe {
+    height: 100%;
+    width: 100%;
+ }
+
+ #carouselShow {
+     margin: -15px;
+ }
+
  .content-box {
     box-shadow: 3px 3px 30px;
     padding: 15px;

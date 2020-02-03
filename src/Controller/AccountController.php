@@ -4,15 +4,21 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationType;
+use Symfony\Component\Mime\Email;
+use App\Repository\UserRepository;
+use Symfony\Component\Mailer\Mailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class AccountController extends AbstractController
 {
@@ -22,11 +28,11 @@ class AccountController extends AbstractController
     public function login(AuthenticationUtils $utils)
     {
         $error = $utils->getLastAuthenticationError();
-        $userEmail = $utils->getLastUsername();
+        $userLogin = $utils->getLastUsername();
 
         return $this->render('account/login.html.twig', [
             'hasError' => $error !== null,
-            'userEmail' => $userEmail
+            'userLogin' => $userLogin
         ]);
     }
 
@@ -85,7 +91,7 @@ class AccountController extends AbstractController
                    ->text('Bonjour, nous vous confirmons la création de votre compte sur SnowTricks !')
             ;
 
-            $sentEmail = $mailer->send($email);
+            $mailer->send($email);
             return $this->redirectToRoute('account_login');
         }
 
@@ -93,4 +99,48 @@ class AccountController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/reset_request", name="account_reset_password_request")
+     */
+    public function resetPasswordRequest(Request $request, EntityManagerInterface $manager, UserRepository $rep, TokenGeneratorInterface $tokenGenerator, MailerInterface $mailer )
+    {
+        $form = $this->createFormBuilder()
+        ->add('loginName', TextType::class, [
+            'label' => 'Votre login',
+            'attr' => [
+                'placeholder' => 'login'
+            ]
+        ])
+        ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $rep->findOneBy(['loginName' => $form->getData()['loginName']]);
+
+            if (!$user) {
+                // $request->getSession()->getFlashBag
+                return $this->redirectToRoute('homepage');
+            }
+            $user->setToken($tokenGenerator->generateToken());
+            $user->setPasswordRequestAt(new \Datetime());
+            $manager->flush();
+            
+            $email = new Email();
+            $email->from('no-reply@gmail.com')
+            ->to($user->getEmail())
+              //->cc('cc@example.com')
+              //->bcc('bcc@example.com')
+              //->replyTo('fabien@example.com')
+              //->priority(Email::PRIORITY_HIGH)
+             ->subject('Demande de réinitialisation de mot de passe')
+             ->text('Pour réinitialiser votre mot de passe, cliquez sur le lien suivant');
+        }
+
+        return $this->render('account/resetPasswordRequest.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
 }

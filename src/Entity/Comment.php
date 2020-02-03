@@ -22,6 +22,7 @@ class Comment
     /**
      * @ORM\Column(type="datetime")
      * 
+     * 
      */
     private $createdAt;
 

@@ -15,6 +15,7 @@ Use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * fields={"name"},
  * message="Le trick est déjà enregistré !")
  * @ORM\HasLifecycleCallbacks
+ * 
  */
 class Trick
 {
@@ -42,6 +43,7 @@ class Trick
 
     /**
      * @ORM\Column(type="datetime")
+     * 
      */
     private $createdAt;
 
@@ -81,6 +83,7 @@ class Trick
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Comment", mappedBy="trick", orphanRemoval=true)
+     * @ORM\OrderBy({"createdAt" = "DESC"})
      */
     private $comments;
 

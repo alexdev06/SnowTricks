@@ -34,7 +34,6 @@ class TrickController extends AbstractController
         ]);
     }
 
-    
     /**
      * @Route("/trick/{slug}", name="trick_show")
      */
@@ -136,6 +135,12 @@ class TrickController extends AbstractController
 
             $manager->persist($trick);
             $manager->flush();
+
+            
+            $this->addFlash(
+                'success',
+                'Le trick ' . $trick->getName() . ' a été enregistré avec succès !'
+            );
 
             return $this->redirectToRoute('homepage');
         }

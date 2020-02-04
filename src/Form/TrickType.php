@@ -54,15 +54,15 @@ class TrickType extends AbstractType
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,
                 'allow_add' => true
-            ])
+            ]);
 
-            ->add('save', SubmitType::class, [
-                'label' => 'Créer le nouveau trick !',
-                'attr' => [
-                    'class' => 'btn btn-success'
-                ]
-            ])
-            ;
+            // ->add('save', SubmitType::class, [
+            //     'label' => 'Créer le nouveau trick !',
+            //     'attr' => [
+            //         'class' => 'btn btn-success'
+            //     ]
+            // ])
+            // ;
 
     }
 

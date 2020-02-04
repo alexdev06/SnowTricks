@@ -6,14 +6,24 @@
 <div class="jumbotron jumbotron-home text-center vertical-center d-flex align-items-center justify-content-center" >
     <div>
         <h1 class="display-3 ">SnowTricks !</h1>
-        <p class="lead light" style="color: white"><a href="#list" class="js-scroll-trigger">Le site de référence sur les tricks de snowboard.</a></p>
+        <p class="lead light">
+            <a href="#list" >Le site de référence sur les tricks de snowboard.</a>
+        </p>
+            {% for label, messages in app.flashes %}
+            <div class="alert alert-{{ label }}">
+                {% for message in messages %}
+                <p class="my-0">{{ message }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %}
     </div>
 </div>
 
 
 <div class="container">
+ 
     <h1 id="list">Liste des tricks !</h1>
-    <p>Il y a actuellement {{ tricks | length}} tricks dans la base de données!</p>
+    <p class="my-4">Il y a actuellement {{ tricks | length}} tricks dans la base de données!</p>
     
     <div class="row">
         {% for trick in tricks | slice(0,12) %}

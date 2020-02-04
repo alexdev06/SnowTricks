@@ -3,12 +3,14 @@
 {% block title %}Inscription{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>Inscription</h1>
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn btn-success">Valider !</button>
-    {{ form_end(form)}}
+<div id="background-show">
+    <div class="container content-box bg-light p-4 mt-4">
+        <h1 class="text-center mb-3 my-4">Inscription</h1>
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-success">Valider !</button>
+        {{ form_end(form)}}
+    </div>
 </div>
 {% endblock %}
 

@@ -71,6 +71,11 @@ class AccountController extends AbstractController
             $manager->persist($user);
             $manager->flush();
 
+            $this->addFlash(
+                'success', 
+                'Votre demande d\'inscription a bien été enregistré, vérifier votre boite email pour la valider!'
+            );
+
             return $this->redirectToRoute('account_login');
         }
 

@@ -36,8 +36,8 @@
                 </a>
             </div>
         </div>
-
-            <div class="row my-5">
+            <h1 class="my-5 text-center">{{ trick.name }}</h1>
+            <div class="row my-3">
                 {% for img in trick.images %}
                     <div class="col-md-3 mb-2">
                         <img src="/uploads/images/{{ img.filename }}" alt="" style="height: 200px; width: 100%; display: block; box-shadow: 5px 5px 5px grey;" />
@@ -50,15 +50,15 @@
                 {% endfor %}
             </div>
 
-            <h2 class="my-4"> Description</h2>
+            <h3 class="my-4"> Description</h3>
             
             <p>{{ trick.description }}</p>
             
-            <div class="row text-center">
-                <div class="col"><strong>Créé le : {{ trick.createdAt | date('d/m/Y à H:i') }}</strong></div>
-                <div class="col"><strong>Catégorie : {{ trick.category.name }}</strong></div>
+            <div class="row text-center mt-4">
+                <div class="col">Créé le : {{ trick.createdAt | date('d/m/Y à H:i') }}</div>
+                <div class="col">Catégorie : {{ trick.category.name }}></div>
                 {% if trick.modifiedAt %}
-                <div class="col"><strong>Modifié le : {{ trick.modifiedAt | date('d/m/Y à H:i' )}}</strong></div>
+                <div class="col">Modifié le : {{ trick.modifiedAt | date('d/m/Y à H:i' )}}</div>
                 {% endif %}
             </div>
         </div>
@@ -77,8 +77,8 @@
 
         {# Affichage des commentaires : #}
         {% if trick.comments | length > 0 %}
-            <div class="comments-list">
-                <h3>Les commentaires :</h3>
+            <div class="comments-list my-4">
+                <h3 class="my-4">Les commentaires :</h3>
                 {% for comment in trick.comments | slice(0, 10) %}
                 <div class="row justify-content-md-center">
                     <div class="media col-md-8">

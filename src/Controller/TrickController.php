@@ -9,11 +9,12 @@ use App\Entity\Comment;
 use App\Form\ImageType;
 use App\Form\TrickType;
 use App\Form\CommentType;
-use App\Repository\CommentRepository;
 use App\Repository\TrickRepository;
+use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
@@ -61,7 +62,8 @@ class TrickController extends AbstractController
     }
 
     /**
-     * @Route("/create/", name="trick_create")
+     * @Route("/create", name="trick_create")
+     * @IsGranted("ROLE_USER")
      */
     public function create(Request $request, EntityManagerInterface $manager)
     {

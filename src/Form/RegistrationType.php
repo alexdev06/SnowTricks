@@ -31,7 +31,7 @@ class RegistrationType extends AbstractType
                     'placeholder' => 'Nom'
                 ]
             ])
-            ->add('userLogin', TextType::class,[
+            ->add('loginName', TextType::class,[
                 'label' => 'Votre nom d\'utilisateur',
                 'attr' =>
                 [

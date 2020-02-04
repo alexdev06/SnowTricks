@@ -34,15 +34,12 @@ class AccountController extends AbstractController
     /**
      * @Route("/logout", name="account_logout")
      */
-    public function logout()
-    {
-        
-    }
+    public function logout() {}
 
     /**
      * @Route("/register", name="account_register")
      */
-    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, MailerInterface $mailer)
+    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
     {
         $user = new User();
 

@@ -4,13 +4,14 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -22,11 +23,11 @@ class AccountController extends AbstractController
     public function login(AuthenticationUtils $utils)
     {
         $error = $utils->getLastAuthenticationError();
-        $userEmail = $utils->getLastUsername();
+        $loginName = $utils->getLastUsername();
 
         return $this->render('account/login.html.twig', [
             'hasError' => $error !== null,
-            'userEmail' => $userEmail
+            'loginName' => $loginName
         ]);
     }
 
@@ -73,19 +74,6 @@ class AccountController extends AbstractController
             $manager->persist($user);
             $manager->flush();
 
-            //Confirmation email sending
-            $email = new Email();
-            $email->from('snowtricks@gmail.com')
-                  ->to($user->getEmail())
-                    //->cc('cc@example.com')
-                    //->bcc('bcc@example.com')
-                    //->replyTo('fabien@example.com')
-                    //->priority(Email::PRIORITY_HIGH)
-                   ->subject('Confirmation de l\'inscription sur SnowTricks')
-                   ->text('Bonjour, nous vous confirmons la création de votre compte sur SnowTricks !')
-            ;
-
-            $sentEmail = $mailer->send($email);
             return $this->redirectToRoute('account_login');
         }
 
@@ -93,4 +81,5 @@ class AccountController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
 }

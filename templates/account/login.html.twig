@@ -8,23 +8,23 @@
             <div class="col-6">
                 <div class="bg-light p-4">
                     <h1>Connexion au site</h1>
-
                     {% if hasError %}
                         <div class="alert alert-danger">Le nom d'utilisateur ou le mot de passe est incorrect !</div>
                     {% endif %}
                     <form action="{{ path('account_login') }}" method="post">
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="text" name="_username" id="email" class="form-control" placeholder="Adresse email..." required value="{{ userEmail }}">
+                            <label for="login">Login</label>
+                            <input type="text" name="_username" id="login" class="form-control" placeholder="login..." required value="{{ loginName }}">
                         </div>
                         <div class="form-group">
                             <label for="password">Mot de passe</label>
                             <input type="password" name="_password" id="password" class="form-control" placeholder="Mot de passe..." required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group text-center mt-5">
                             <button type="submit" class="btn btn-success" >Connexion !</button>
                         </div>
                     </form>
+                    <p class="text-center"><a href="{{ path('account_reset_password_request') }}">mot de passe oublié ?</a></p>
                 </div>
             </div>
         </div>

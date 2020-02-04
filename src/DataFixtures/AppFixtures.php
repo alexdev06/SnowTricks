@@ -25,7 +25,7 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create('fr-FR');
 
-        for ($h = 1; $h <= 5; $h++) {
+        for ($h = 1; $h <= 4; $h++) {
             $category = new Category();
 
             $name = $faker->words(mt_rand(1,3), true);
@@ -33,10 +33,12 @@ class AppFixtures extends Fixture
 
             $category->setName($name)
                      ->setDescription($description);
-            for ($k = 1; $k <= 5; $k++) {
+                     
+            for ($k = 1; $k <= 2; $k++) {
                 $user = new User();
                 $firstName = $faker->firstname;
                 $lastName = $faker->lastname;
+                $loginName = $faker->userName;
                 $email = $faker->email;
                 $passwordHash = $this->encoder->encodePassword($user, 'password');
 
@@ -57,6 +59,7 @@ class AppFixtures extends Fixture
                 $user->setFirstName($firstName)
                     ->setLastName($lastName)
                     ->setEmail($email)
+                    ->setLoginName($loginName)
                     ->setPasswordHash($passwordHash)
                     ->setAvatar($avatar);
 

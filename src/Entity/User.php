@@ -73,6 +73,22 @@ class User implements UserInterface
      */
     private $tricks;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min = 2, minMessage = "Votre login doit faire au moins 2 caractères !")
+     */
+    private $loginName;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $passwordRequestAt;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
@@ -157,7 +173,7 @@ class User implements UserInterface
 
     public function getUsername()
     {
-        return $this->email;
+        return $this->loginName;
     }
 
     public function eraseCredentials()
@@ -235,6 +251,42 @@ class User implements UserInterface
     public function getFullName()
     {
         return $this->firstName . ' ' . $this->lastName;
+    }
+
+    public function getLoginName()
+    {
+        return $this->loginName;
+    }
+
+    public function setLoginName(string $loginName): self
+    {
+        $this->loginName = $loginName;
+
+        return $this;
+    }
+
+    public function getPasswordRequestAt(): ?\DateTimeInterface
+    {
+        return $this->passwordRequestAt;
+    }
+
+    public function setPasswordRequestAt(?\DateTimeInterface $passwordRequestAt): self
+    {
+        $this->passwordRequestAt = $passwordRequestAt;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
     }
 }
 

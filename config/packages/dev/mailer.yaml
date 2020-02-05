@@ -1,4 +1,4 @@
 # config/packages/dev/mailer.yaml
 framework:
     mailer:
-        dsn: 'null://null'
+        dsn: '%env(MAILER_DSN)%'

@@ -1,15 +1,13 @@
 .jumbotron-home {
     background-image: url('../images/head_snow.jpg');
     background-size: cover;
-    color: white;
     text-shadow: 3px 3px 3px rgba(0,0,0,0.5);
     height: 100vh;
-
-
 }
 
-.jumbotron-home h1, .jumbotron-home p {
+.jumbotron-home h1, .jumbotron-home a {
     font-weight: 600;
+    color: white;
 }
 
 .jumbotron-home a {

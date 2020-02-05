@@ -3,17 +3,22 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ResettingType;
 use App\Form\RegistrationType;
+use Symfony\Component\Mime\Email;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class AccountController extends AbstractController
 {
@@ -84,4 +89,113 @@ class AccountController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/reset_request", name="account_reset_password_request")
+     */
+    public function resetPasswordRequest(Request $request, EntityManagerInterface $manager, UserRepository $rep, TokenGeneratorInterface $tokenGenerator, MailerInterface $mailer )
+    {
+        $form = $this->createFormBuilder()
+        ->add('loginName', TextType::class, [
+            'label' => 'Votre login',
+            'attr' => [
+                'placeholder' => 'login'
+            ]
+        ])
+        ->getForm();
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+          
+            $user = $rep->findOneBy(['loginName' => $form->get('loginName')->getData()]);
+
+            if (!$user) {
+                $this->addFlash(
+                    'danger', 
+                    'Cet utilisateur n\'existe pas !'
+                );
+                return $this->redirectToRoute('homepage');
+            }
+
+            $user->setToken($tokenGenerator->generateToken());
+            $user->setPasswordRequestAt(new \Datetime());
+            
+            $manager->flush();
+            
+            $email = new Email();
+            // $emailBody = 'Pour réinitialiser votre mot de passe, cliquez sur le lien suivant';
+            $email->from('no-reply@snowtricks.com')
+                  ->to($user->getEmail())
+                  ->priority(Email::PRIORITY_HIGH)
+                  ->subject('Demande de réinitialisation de mot de passe')
+                  ->text("Pour réinitialiser votre mot de passe, cliquez sur le lien suivant https://127.0.0.1:8000/reset/{$user->getId()}/{$user->getToken()}");
+
+            $mailer->send($email);
+
+            $this->addFlash(
+                'success', 
+                'La demande de réinitialisation a été envoyée, surveillez votre boite email !'
+            );
+
+            return $this->redirectToRoute('homepage');
+
+        }
+
+        return $this->render('account/resetPasswordRequest.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+
+    private function isRequestInTime(\Datetime $passwordRequestAt = null)
+    {
+        if ($passwordRequestAt === null)
+        {
+            return false;        
+        }
+        
+        $now = new \DateTime();
+        $interval = $now->getTimestamp() - $passwordRequestAt->getTimestamp();
+
+        $daySeconds = 60 * 10;
+        $response = $interval > $daySeconds ? false : $response = true;
+        return $response;
+    }
+
+    /**
+     * @Route("reset/{id}/{token}", name="account_reset_password")
+     */
+    public function reset(User $user, $token, Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager)
+    {
+        
+        if ($user->getToken() === null || $token !== $user->getToken() || !$this->isRequestInTime($user->getPasswordRequestAt()))
+        {
+            throw new AccessDeniedHttpException();
+        }
+
+        $form = $this->createForm(ResettingType::class, $user);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+            $passwordHash = $encoder->encodePassword($user, $user->getPasswordHash());
+            $user->setPasswordHash($passwordHash);
+
+            // réinitialisation du token à null pour qu'il ne soit plus réutilisable
+            $user->setToken(null);
+            $user->setPasswordRequestAt(null);
+
+            $manager->persist($user);
+            $manager->flush();
+
+            $this->addFlash(
+                'success', 
+                'Le nouveau mot de passe a été enregistré avec succès !'
+            );
+            return $this->redirectToRoute('account_login');
+        }
+
+        return $this->render('account/reset.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
 }

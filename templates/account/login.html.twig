@@ -6,7 +6,7 @@
 <div id="background-show">
     <div class="container">
         <div class="row justify-content-center py-4">
-            <div class="col-6">
+            <div class="col-md-9 col-lg-6 ">
                 <div class="bg-light content-box p-4">
                     <h1>Connexion au site</h1>
                     {% if hasError %}
@@ -15,7 +15,7 @@
                     {% for label, messages in app.flashes %}
                         <div class="alert alert-{{ label }}">
                             {% for message in messages %}
-                            <p>{{ message }}</p>
+                            <div>{{ message }}</div>
                             {% endfor %}
                         </div>
                     {% endfor %} 
@@ -33,7 +33,7 @@
                             <button type="submit" class="btn btn-success" >Connexion !</button>
                         </div>
                     </form>
-                    <p class="text-center"><a href="#">mot de passe oublié ?</a></p>
+                    <p class="text-center"><a href="{{ path('account_reset_password_request') }}">mot de passe oublié ?</a></p>
                 </div>
             </div>
         </div>

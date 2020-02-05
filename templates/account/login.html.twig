@@ -10,7 +10,7 @@
                 <div class="bg-light content-box p-4">
                     <h1>Connexion au site</h1>
                     {% if hasError %}
-                        <div class="alert alert-danger">Le nom d'utilisateur ou le mot de passe est incorrect !</div>
+                        <div class="alert alert-danger">Le compte n'a pas été validé ou le nom d'utilisateur ou le mot de passe est incorrect !</div>
                     {% endif %}
                     {% for label, messages in app.flashes %}
                         <div class="alert alert-{{ label }}">

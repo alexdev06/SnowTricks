@@ -44,7 +44,7 @@ class AccountController extends AbstractController
     /**
      * @Route("/register", name="account_register")
      */
-    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder)
+    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, TokenGeneratorInterface $tokenGenerator, MailerInterface $mailer)
     {
         $user = new User();
 
@@ -72,10 +72,21 @@ class AccountController extends AbstractController
                 $user->setAvatar($newFilename);
             }
 
+            $user->setToken($tokenGenerator->generateToken());
+            $user->setIsActive(false);
+            $user->setPasswordRequestAt(new \Datetime());
 
             $manager->persist($user);
             $manager->flush();
 
+            $email = new Email();
+            $email->from('no-reply@snowtricks.com')
+                  ->to($user->getEmail())
+                  ->priority(Email::PRIORITY_HIGH)
+                  ->subject('Validation de votre compte utilisateur SnowTricks')
+                  ->text("Pour valider votre inscription sur le site SnowTricks, cliquez sur le lien suivant https://127.0.0.1:8000/register/{$user->getId()}/{$user->getToken()}");
+
+            $mailer->send($email);
             $this->addFlash(
                 'success', 
                 'Votre demande d\'inscription a bien été enregistré, vérifier votre boite email pour la valider!'
@@ -87,6 +98,32 @@ class AccountController extends AbstractController
         return $this->render('account/register.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/register/{id}/{token}", name="account_register_confirmation")
+     */
+    public function registerConfirmation(User $user, $token, EntityManagerInterface $manager)
+    {
+        if ($user->getToken() === null || $token !== $user->getToken() || !$this->isRequestInTime($user->getPasswordRequestAt()))
+        {
+            throw new AccessDeniedHttpException();
+        }
+    
+        $user->setToken(null);
+        $user->setIsActive(true);
+
+        $manager->persist($user);
+
+        $manager->flush();
+
+        $this->addFlash(
+            'success',
+            'Votre compte a été activé avec succès !'
+        );
+
+        return $this->redirectToRoute('account_login');
+        
     }
 
     /**
@@ -146,22 +183,6 @@ class AccountController extends AbstractController
         ]);
     }
 
-
-    private function isRequestInTime(\Datetime $passwordRequestAt = null)
-    {
-        if ($passwordRequestAt === null)
-        {
-            return false;        
-        }
-        
-        $now = new \DateTime();
-        $interval = $now->getTimestamp() - $passwordRequestAt->getTimestamp();
-
-        $daySeconds = 60 * 10;
-        $response = $interval > $daySeconds ? false : $response = true;
-        return $response;
-    }
-
     /**
      * @Route("reset/{id}/{token}", name="account_reset_password")
      */
@@ -172,30 +193,47 @@ class AccountController extends AbstractController
         {
             throw new AccessDeniedHttpException();
         }
-
+        
         $form = $this->createForm(ResettingType::class, $user);
         $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
+        
+        if ($form->isSubmitted() && $form->isValid()) {
             $passwordHash = $encoder->encodePassword($user, $user->getPasswordHash());
             $user->setPasswordHash($passwordHash);
-
+            
             // réinitialisation du token à null pour qu'il ne soit plus réutilisable
             $user->setToken(null);
             $user->setPasswordRequestAt(null);
-
+            
             $manager->persist($user);
             $manager->flush();
-
+            
             $this->addFlash(
                 'success', 
                 'Le nouveau mot de passe a été enregistré avec succès !'
             );
             return $this->redirectToRoute('account_login');
         }
-
+        
         return $this->render('account/reset.html.twig', [
             'form' => $form->createView()
-        ]);
+            ]);
+    }
+
+    /**
+     * Check the time elapsed since email send.
+     */
+    private function isRequestInTime(\Datetime $passwordRequestAt = null)
+    {
+        if ($passwordRequestAt === null)
+        {
+            return false;        
+        }
+        
+        $now = new \DateTime();
+        $interval = $now->getTimestamp() - $passwordRequestAt->getTimestamp();
+        $daySeconds = 60 * 10;
+        $response = $interval > $daySeconds ? false : $response = true;
+        return $response;
     }
 }

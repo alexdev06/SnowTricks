@@ -61,7 +61,10 @@ class AppFixtures extends Fixture
                     ->setEmail($email)
                     ->setLoginName($loginName)
                     ->setPasswordHash($passwordHash)
-                    ->setAvatar($avatar);
+                    ->setAvatar($avatar)
+                    ->setIsActive(true)
+                    ;
+                    
 
                     for ($i = 1; $i <= 2; $i++) {
                         $trick = new Trick();

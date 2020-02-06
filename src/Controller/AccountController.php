@@ -123,6 +123,7 @@ class AccountController extends AbstractController
         }
     
         $user->setToken(null);
+        $user->setPasswordRequestAt(null);
         $user->setIsActive(true);
 
         $manager->persist($user);
@@ -145,9 +146,9 @@ class AccountController extends AbstractController
     {
         $form = $this->createFormBuilder()
         ->add('loginName', TextType::class, [
-            'label' => 'Votre login',
+            'label' => 'login',
             'attr' => [
-                'placeholder' => 'login'
+                'placeholder' => 'Votre login ...'
             ]
         ])
         ->getForm();

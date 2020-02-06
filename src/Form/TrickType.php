@@ -42,8 +42,9 @@ class TrickType extends AbstractType
 
             ])
 
-            ->add('imageMain', FileType::class, [
-                'label' => 'Image de fond'
+            ->add('imageMainFile', FileType::class, [
+                'label' => 'Image de fond',
+                'mapped' => false
             ])
 
             ->add('images', CollectionType::class, [

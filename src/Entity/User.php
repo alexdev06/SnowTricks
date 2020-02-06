@@ -12,8 +12,10 @@ Use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @UniqueEntity(
- * fields={"email"},
- * message="L'email est déjà utilisé !")
+ * fields={"email",
+ * "loginName"
+ * },
+ * message="L'email ou le nom d'utilisateur est déjà utilisé !")
  */
 class User implements UserInterface
 {
@@ -58,8 +60,7 @@ class User implements UserInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Image(maxSize = "2M", maxSizeMessage="Le fichier image ne doit pas dépasser 2Mo !")
-     *  
+     * 
      */
     private $avatar;
 
@@ -82,7 +83,7 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="datetime", nullable=true)
      */
-    private $passwordRequestAt;
+    private $tokenRequestAt;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -282,14 +283,14 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getPasswordRequestAt(): ?\DateTimeInterface
+    public function getTokenRequestAt(): ?\DateTimeInterface
     {
-        return $this->passwordRequestAt;
+        return $this->tokenRequestAt;
     }
 
-    public function setPasswordRequestAt(?\DateTimeInterface $passwordRequestAt): self
+    public function setTokenRequestAt(?\DateTimeInterface $tokenRequestAt): self
     {
-        $this->passwordRequestAt = $passwordRequestAt;
+        $this->tokenRequestAt = $tokenRequestAt;
 
         return $this;
     }

@@ -53,48 +53,60 @@ class AccountController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $passwordHash = $encoder->encodePassword($user, $user->getPasswordHash());
-            $user->setPasswordHash($passwordHash);
+            $secret = "6LfXKNYUAAAAAOvOl0Zg1Bqg-sB9ZzVls-79uPyi";
+            $response = $_POST['g-recaptcha-response'];
+            $remoteip = $_SERVER['REMOTE_ADDR'];
+            
+            $api_url = "https://www.google.com/recaptcha/api/siteverify?secret=" 
+                . $secret
+                . "&response=" . $response
+                . "&remoteip=" . $remoteip ;
+            
+            $decode = json_decode(file_get_contents($api_url), true);
+            
+            if ($decode['success'] == true) {
+                $passwordHash = $encoder->encodePassword($user, $user->getPasswordHash());
+                $user->setPasswordHash($passwordHash);
 
-            $avatarFile = $form->get('avatar')->getData();
-            if ($avatarFile) {
-                $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $renamedFilename = $user->getFirstName() . '_' . $user->getLastName() . '_' . $originalFilename;
-                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '-' . $avatarFile->guessExtension();
-                try {
-                    $avatarFile->move($this->getParameter('image_directory'), $newFilename);
+                $avatarFile = $form->get('avatar')->getData();
+                if ($avatarFile) {
+                    $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $renamedFilename = $user->getFirstName() . '_' . $user->getLastName() . '_' . $originalFilename;
+                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
+                    $newFilename = $safeFilename . '-' . uniqid() . '-' . $avatarFile->guessExtension();
+                    try {
+                        $avatarFile->move($this->getParameter('image_directory'), $newFilename);
 
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                    }
+
+                    $user->setAvatar($newFilename);
                 }
 
-                $user->setAvatar($newFilename);
-            }
+                $user->setToken($tokenGenerator->generateToken());
+                $user->setIsActive(false);
+                $user->setPasswordRequestAt(new \Datetime());
 
-            $user->setToken($tokenGenerator->generateToken());
-            $user->setIsActive(false);
-            $user->setPasswordRequestAt(new \Datetime());
+                $manager->persist($user);
+                $manager->flush();
 
-            $manager->persist($user);
-            $manager->flush();
+                $email = new Email();
+                $email->from('no-reply@snowtricks.com')
+                    ->to($user->getEmail())
+                    ->priority(Email::PRIORITY_HIGH)
+                    ->subject('Validation de votre compte utilisateur SnowTricks')
+                    ->text("Pour valider votre inscription sur le site SnowTricks, cliquez sur le lien suivant https://127.0.0.1:8000/register/{$user->getId()}/{$user->getToken()}");
 
-            $email = new Email();
-            $email->from('no-reply@snowtricks.com')
-                  ->to($user->getEmail())
-                  ->priority(Email::PRIORITY_HIGH)
-                  ->subject('Validation de votre compte utilisateur SnowTricks')
-                  ->text("Pour valider votre inscription sur le site SnowTricks, cliquez sur le lien suivant https://127.0.0.1:8000/register/{$user->getId()}/{$user->getToken()}");
-
-            $mailer->send($email);
-            $this->addFlash(
-                'success', 
-                'Votre demande d\'inscription a bien été enregistré, vérifier votre boite email pour la valider!'
-            );
+                $mailer->send($email);
+                $this->addFlash(
+                    'success', 
+                    'Votre demande d\'inscription a bien été enregistré, vérifier votre boite email pour la valider!'
+                );
 
             return $this->redirectToRoute('account_login');
-        }
-
+            }
+        }   
         return $this->render('account/register.html.twig', [
             'form' => $form->createView()
         ]);
@@ -111,6 +123,7 @@ class AccountController extends AbstractController
         }
     
         $user->setToken(null);
+        $user->setPasswordRequestAt(null);
         $user->setIsActive(true);
 
         $manager->persist($user);
@@ -133,9 +146,9 @@ class AccountController extends AbstractController
     {
         $form = $this->createFormBuilder()
         ->add('loginName', TextType::class, [
-            'label' => 'Votre login',
+            'label' => 'login',
             'attr' => [
-                'placeholder' => 'login'
+                'placeholder' => 'Votre login ...'
             ]
         ])
         ->getForm();

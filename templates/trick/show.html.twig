@@ -6,36 +6,31 @@
 <div id="background-show">
     <div class="container content-box">
         <div id="cadre">
-            {# <div class="jumbotron jumbotron-show text-center d-flex align-items-center justify-content-center" style="background-image: url('../uploads/images/{{ trick.imageMain }}')">
-                <h1 class="text-center">{{ trick.name }}</h1>
-            </div> #}
-
-
-        <div id="carouselShow" class="carousel slide carousel-fade" data-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item text-center active">
-                    <img src="/uploads/images/{{ trick.imageMain }}" class="d-block w-100 h-100 img-fluid" alt="..." >
-                </div>
-                {% for img in trick.images %}
-                <div class="carousel-item">
-                    <img src="/uploads/images/{{ img.filename }}" class="d-block w-100 h-100 img-fluid" alt="..." >
-                </div>
-                {% endfor %}
-                {% for video in trick.videos %}
-                    <div class="carousel-item">
-                        {{ video.url | raw }}
+            <div id="carouselShow" class="carousel slide carousel-fade" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item text-center active">
+                        <img src="/uploads/images/{{ trick.imageMain }}" class="d-block w-100 h-100 img-fluid" alt="..." >
                     </div>
-                {% endfor %}
-                <a class="carousel-control-prev" href="#carouselShow" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carouselShow" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
+                    {% for img in trick.images %}
+                    <div class="carousel-item">
+                        <img src="/uploads/images/{{ img.filename }}" class="d-block w-100 h-100 img-fluid" alt="..." >
+                    </div>
+                    {% endfor %}
+                    {% for video in trick.videos %}
+                        <div class="carousel-item">
+                            {{ video.embedHtml | raw }}
+                        </div>
+                    {% endfor %}
+                    <a class="carousel-control-prev" href="#carouselShow" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselShow" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
             </div>
-        </div>
             <h1 class="my-5 text-center">{{ trick.name }}</h1>
             <div class="row my-3">
                 {% for img in trick.images %}
@@ -45,7 +40,7 @@
                 {% endfor %}
                 {% for video in trick.videos %}
                     <div class="col-md-3 video-import mb-2">
-                        {{ video.url | raw }}
+                        {{ video.embedHtml | raw }}
                     </div>
                 {% endfor %}
             </div>
@@ -54,9 +49,9 @@
             
             <p>{{ trick.description }}</p>
             
-            <div class="row text-center mt-4">
+            <div class="row text-center mt-4" style="font-size: 0.8em">
                 <div class="col">Créé le : {{ trick.createdAt | date('d/m/Y à H:i') }}</div>
-                <div class="col">Catégorie : {{ trick.category.name }}></div>
+                <div class="col">Catégorie : {{ trick.category.name }}</div>
                 {% if trick.modifiedAt %}
                 <div class="col">Modifié le : {{ trick.modifiedAt | date('d/m/Y à H:i' )}}</div>
                 {% endif %}
@@ -79,7 +74,7 @@
         {% if trick.comments | length > 0 %}
             <div class="comments-list my-4">
                 <h3 class="my-4">Les commentaires :</h3>
-                {% for comment in trick.comments | slice(0, 10) %}
+                {% for comment in trick.comments | slice(0, 3) %}
                 <div class="row justify-content-md-center">
                     <div class="media col-md-8">
                         <img src="{{ comment.user.avatar }}" class="align-self-center mr-3" alt="..." style="width: 64px; height: 64px; border-radius: 50%">
@@ -91,7 +86,7 @@
                 </div>
                 {% endfor %}
               
-                {% if trick.comments | length > 10 %}
+                {% if trick.comments | length > 3 %}
                 <div class="d-flex justify-content-center my-2">
                     <button class="btn btn-light" type="button" data-toggle="collapse" data-target="#collapseComments" aria-expanded="false" aria-controls="collapseComments">
                         Afficher plus de commentaires!
@@ -99,7 +94,7 @@
                 </div>
 
                 <div class="collapse" id="collapseComments">
-                    {% for comment in trick.comments | slice(10, trick.comments | length) %}
+                    {% for comment in trick.comments | slice(3, trick.comments | length) %}
                     <div class="row justify-content-md-center">
                         <div class="media col-md-8">
                             <img src="{{ comment.user.avatar }}" class="align-self-center mr-3" alt="..." style="width: 64px; height: 64px; border-radius: 50%">

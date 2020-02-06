@@ -19,7 +19,7 @@ class Video
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $url;
+    private $embedHtml;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="videos")
@@ -32,14 +32,14 @@ class Video
         return $this->id;
     }
 
-    public function getUrl(): ?string
+    public function getEmbedHtml(): ?string
     {
-        return $this->url;
+        return $this->embedHtml;
     }
 
-    public function setUrl(string $url): self
+    public function setEmbedHtml(string $embedHtml): self
     {
-        $this->url = $url;
+        $this->embedHtml = $embedHtml;
 
         return $this;
     }

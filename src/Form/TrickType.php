@@ -56,14 +56,6 @@ class TrickType extends AbstractType
                 'allow_add' => true
             ]);
 
-            // ->add('save', SubmitType::class, [
-            //     'label' => 'Créer le nouveau trick !',
-            //     'attr' => [
-            //         'class' => 'btn btn-success'
-            //     ]
-            // ])
-            // ;
-
     }
 
     public function configureOptions(OptionsResolver $resolver)

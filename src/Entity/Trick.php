@@ -12,7 +12,9 @@ Use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
  * @UniqueEntity(
- * fields={"name"},
+ * fields={"name",
+ * "slug"
+ * },
  * message="Le trick est déjà enregistré !")
  * @ORM\HasLifecycleCallbacks
  * 
@@ -60,7 +62,6 @@ class Trick
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\Image(maxSize = "2M", maxSizeMessage="Le fichier image ne doit pas dépasser 2Mo !")
      */
     private $imageMain;
 

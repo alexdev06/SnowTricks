@@ -68,7 +68,7 @@ class AccountController extends AbstractController
                 $passwordHash = $encoder->encodePassword($user, $user->getPasswordHash());
                 $user->setPasswordHash($passwordHash);
 
-                $avatarFile = $form->get('avatar')->getData();
+                $avatarFile = $form->get('avatarFile')->getData();
                 if ($avatarFile) {
                     $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
                     $renamedFilename = $user->getFirstName() . '_' . $user->getLastName() . '_' . $originalFilename;
@@ -86,7 +86,7 @@ class AccountController extends AbstractController
 
                 $user->setToken($tokenGenerator->generateToken());
                 $user->setIsActive(false);
-                $user->setPasswordRequestAt(new \Datetime());
+                $user->setTokenRequestAt(new \Datetime());
 
                 $manager->persist($user);
                 $manager->flush();
@@ -117,13 +117,13 @@ class AccountController extends AbstractController
      */
     public function registerConfirmation(User $user, $token, EntityManagerInterface $manager)
     {
-        if ($user->getToken() === null || $token !== $user->getToken() || !$this->isRequestInTime($user->getPasswordRequestAt()))
+        if ($user->getToken() === null || $token !== $user->getToken() || !$this->isRequestInTime($user->getTokenRequestAt()))
         {
             throw new AccessDeniedHttpException();
         }
     
         $user->setToken(null);
-        $user->setPasswordRequestAt(null);
+        $user->setTokenRequestAt(null);
         $user->setIsActive(true);
 
         $manager->persist($user);
@@ -168,12 +168,12 @@ class AccountController extends AbstractController
             }
 
             $user->setToken($tokenGenerator->generateToken());
-            $user->setPasswordRequestAt(new \Datetime());
+            $user->setTokenRequestAt(new \Datetime());
             
             $manager->flush();
             
             $email = new Email();
-            // $emailBody = 'Pour réinitialiser votre mot de passe, cliquez sur le lien suivant';
+
             $email->from('no-reply@snowtricks.com')
                   ->to($user->getEmail())
                   ->priority(Email::PRIORITY_HIGH)
@@ -202,7 +202,7 @@ class AccountController extends AbstractController
     public function reset(User $user, $token, Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $manager)
     {
         
-        if ($user->getToken() === null || $token !== $user->getToken() || !$this->isRequestInTime($user->getPasswordRequestAt()))
+        if ($user->getToken() === null || $token !== $user->getToken() || !$this->isRequestInTime($user->getTokenRequestAt()))
         {
             throw new AccessDeniedHttpException();
         }
@@ -214,9 +214,8 @@ class AccountController extends AbstractController
             $passwordHash = $encoder->encodePassword($user, $user->getPasswordHash());
             $user->setPasswordHash($passwordHash);
             
-            // réinitialisation du token à null pour qu'il ne soit plus réutilisable
             $user->setToken(null);
-            $user->setPasswordRequestAt(null);
+            $user->setTokenRequestAt(null);
             
             $manager->persist($user);
             $manager->flush();
@@ -236,15 +235,15 @@ class AccountController extends AbstractController
     /**
      * Check the time elapsed since email send.
      */
-    private function isRequestInTime(\Datetime $passwordRequestAt = null)
+    private function isRequestInTime(\Datetime $tokenRequestAt = null)
     {
-        if ($passwordRequestAt === null)
+        if ($tokenRequestAt === null)
         {
             return false;        
         }
         
         $now = new \DateTime();
-        $interval = $now->getTimestamp() - $passwordRequestAt->getTimestamp();
+        $interval = $now->getTimestamp() - $tokenRequestAt->getTimestamp();
         $daySeconds = 60 * 10;
         $response = $interval > $daySeconds ? false : $response = true;
         return $response;

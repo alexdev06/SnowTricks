@@ -83,7 +83,7 @@ class TrickController extends AbstractController
             }
             
             $imagesCollection = $form->get('images')->getData();
-
+ 
             foreach ($imagesCollection as $image) {
 
                 if ($image) {
@@ -108,7 +108,7 @@ class TrickController extends AbstractController
             }
     
 
-            $imageMainFile = $form->get('imageMain')->getData();
+            $imageMainFile = $form->get('imageMainFile')->getData();
 
 
             if ($imageMainFile) {

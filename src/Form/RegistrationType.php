@@ -56,9 +56,10 @@ class RegistrationType extends AbstractType
                     'placeholder' => 'Confirmation du mot de passe'
                 ]
             ])
-            ->add('avatar', FileType::class, [
+            ->add('avatarFile', FileType::class, [
                 'required' => false,
-                'label' => 'Votre photo de profile'
+                'label' => 'Votre photo de profile',
+                'mapped' => false
             ])
         ;
     }

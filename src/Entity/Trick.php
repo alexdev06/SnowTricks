@@ -67,7 +67,7 @@ class Trick
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="tricks")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * 
      */
     private $category;
@@ -92,6 +92,8 @@ class Trick
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks")
      */
     private $user;
+
+
 
     public function __construct()
     {

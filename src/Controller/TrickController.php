@@ -5,15 +5,22 @@ namespace App\Controller;
 use DateTime;
 use App\Entity\Image;
 use App\Entity\Trick;
+use App\Entity\Video;
 use App\Entity\Comment;
 use App\Form\ImageType;
 use App\Form\TrickType;
 use App\Form\CommentType;
+use App\Form\TrickEditType;
+use App\Form\RegistrationType;
+use App\Repository\ImageRepository;
 use App\Repository\TrickRepository;
+use App\Repository\VideoRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -37,15 +44,13 @@ class TrickController extends AbstractController
     /**
      * @Route("/trick/{slug}", name="trick_show")
      */
-    public function show(TrickRepository $repo, $slug, Request $request, EntityManagerInterface $manager, CommentRepository $rep)
+    public function show(TrickRepository $repo, $slug, Request $request, EntityManagerInterface $manager)
     {
         $trick = $repo->findOneBySlug($slug);
        
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
-
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setCreatedAt(new \DateTime());
             $comment->setUser($this->getUser());
@@ -67,86 +72,192 @@ class TrickController extends AbstractController
     public function create(Request $request, EntityManagerInterface $manager)
     {
         $trick = new Trick();
-
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var UploadedFile $imageMainFile */
+            $uploadedFile = $form->get('imageMainFile')->getData();
+            if ($uploadedFile) {
+                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $filename = $safeFilename . '_' . uniqid() . '_' . $uploadedFile->guessExtension();
 
-            $videosCollection = $form->get('videos')->getData();
+                try {
+                    $uploadedFile->move($this->getParameter('image_directory'), $filename);
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                $trick->setImageMain($filename);
+            }
 
-            foreach ($videosCollection as $video) {
+            foreach ($trick->getVideos() as $video) {
                 if ($video) {
                     $video->setTrick($trick);
                     $manager->persist($video);
                 }
             }
-            
-            $imagesCollection = $form->get('images')->getData();
- 
-            foreach ($imagesCollection as $image) {
 
+            foreach ($trick->getImages() as $image) {
                 if ($image) {
-                    $originalFilename = pathinfo($image->getFile()->getClientOriginalName(), PATHINFO_FILENAME);
-                    $renamedFilename = $trick->getName() . '_' . $originalFilename;
-                    
-                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
-                    $newFilename = $safeFilename . '_' . uniqid() . '_' . $image->getFile()->guessExtension();
+                    $originalFilename = pathinfo($image->getImageFile()->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                    $filename = $safeFilename . '_' . uniqid() . '_' . $image->getImageFile()->guessExtension();
                     
                     try {
-                        $image->getFile()->move($this->getParameter('image_directory'), $newFilename);
-                        
+                        $image->getImageFile()->move($this->getParameter('image_directory'), $filename);
                     } catch (FileException $e) {
                         // ... handle exception if something happens during file upload
                     }
-                    
+                    $image->setTrick($trick);
+                    $image->setFilename($filename); 
+                    $manager->persist($image);
                 }
-                
-                $image->setTrick($trick);
-                $image->setFilename($newFilename); 
-                $manager->persist($image);
             }
-    
 
-            $imageMainFile = $form->get('imageMainFile')->getData();
-
-
-            if ($imageMainFile) {
-  
-                $originalFilename = pathinfo($imageMainFile->getClientOriginalName(), PATHINFO_FILENAME);
-
-                $renamedFilename = $trick->getName() . '_' . $originalFilename;
-
-                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
-                $newFilename = $safeFilename . '_' . uniqid() . '_' . $imageMainFile->guessExtension();
-
-                try {
-                    $imageMainFile->move($this->getParameter('image_directory'), $newFilename);
-
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-
-            }
             $trick->setCreatedAt(new \DateTime());
-            $trick->setImageMain($newFilename);
             $trick->setUser($this->getUser());
-            
-
+    
             $manager->persist($trick);
             $manager->flush();
 
-            
             $this->addFlash(
                 'success',
                 'Le trick ' . $trick->getName() . ' a été enregistré avec succès !'
             );
-
             return $this->redirectToRoute('homepage');
         }
-        
         return $this->render('trick/create.html.twig', [
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/trick/{slug}/edit", name="trick_edit")
+     * @IsGranted("ROLE_USER")
+     */
+    public function edit(Trick $trick, Request $request, EntityManagerInterface $manager)
+    {
+        // on récupère un nom de fichier qui est l'entrée en db.
+        $imageMain = $trick->getImageMain();
+        if ($imageMain !== null) {
+            $trick->setImageMain(new File($this->getParameter('image_directory') . '/' . $imageMain));
+        }
+       
+        $form = $this->createForm(TrickType::class, $trick);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile*/
+            $uploadedFile = $form->get('imageMainFile')->getData();
+            if ($uploadedFile) {
+                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $filename = $safeFilename . '_' . uniqid() . '_' . $uploadedFile->guessExtension();
+                
+                try {
+                    $uploadedFile->move($this->getParameter('image_directory'), $filename);
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+                
+                $trick->setImageMain($filename);
+            } else {
+                $trick->setImageMain($imageMain);
+            }
+
+            foreach ($trick->getVideos() as $video) {
+                if ($video) {
+                    $video->setTrick($trick);
+                    $manager->persist($video);
+                }
+            }
+
+            $uploadedCollection = $form->get('images')->getData();
+            foreach ($uploadedCollection as $image) {
+                if ($image->getImageFile()) {
+                    $originalFilename = pathinfo($image->getImageFile()->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                    $filename = $safeFilename . '_' . uniqid() . '_' . $image->getImageFile()->guessExtension();
+                    
+                    try {
+                        $image->getImageFile()->move($this->getParameter('image_directory'), $filename);
+                        
+                    } catch (FileException $e) {
+                        // ... handle exception if something happens during file upload
+                    }
+                    $image->setTrick($trick);
+                    $image->setFilename($filename); 
+                    $manager->persist($image);
+                }
+            }
+
+            $trick->setModifiedAt(new \DateTime());
+            $trick->setUser($this->getUser());
+
+            $manager->persist($trick);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'Le trick ' . $trick->getName() . ' a été modifié avec succès !'
+            );
+            return $this->redirectToRoute('homepage');
+        }
+        return $this->render('trick/edit.html.twig', [
+            'form' => $form->createView(),
+            'trick' => $trick,
+            'imageMain' => $imageMain
+        ]);
+    }
+
+    /**
+     * @Route("/trick/{slug}/delete", name="trick_delete")
+     * @IsGranted("ROLE_USER")
+     */
+    public function delete(Trick $trick, EntityManagerInterface $manager)
+    {
+            $manager->remove($trick);
+            $manager->flush();
+
+            $this->addFlash(
+                "success",
+                "Le trick a bien été supprimé"
+            );
+
+            return $this->redirectToRoute('homepage');
+    }
+
+    /**
+     * @Route("/image{id}", name="image_remove")
+     */
+    public function removeImage(Image $image, EntityManagerInterface $manager, ImageRepository $imageRepo)
+    {
+        $image = $imageRepo->findOneById($image);
+
+        $manager->remove($image);
+        $manager->flush();
+
+        return $this->json([
+            'code' => 200,
+            'message' => 'L\'image a bien été supprimée !'
+        ], 200);
+    }
+
+    /**
+     * @Route("/video{id}", name="video_remove")
+     */
+    public function removeVideo(Video $video, EntityManagerInterface $manager, VideoRepository $videoRepo)
+    {
+        $video = $videoRepo->findOneById($video);
+
+        $manager->remove($video);
+        $manager->flush();
+
+        return $this->json([
+            'code' => 200,
+            'message' => 'La video a bien été supprimée !'
+        ], 200);
+    }
+
 }

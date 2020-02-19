@@ -31,17 +31,17 @@ class Image
     private $trick;
 
 
-    private $file;
+    private $imageFile;
 
 
-    public function getFile()
+    public function getImageFile()
     {
-        return $this->file;
+        return $this->imageFile;
     }
 
-    public function setFile(UploadedFile $file = null)
+    public function setImageFile(UploadedFile $imageFile = null)
     {
-        $this->file = $file;
+        $this->imageFile = $imageFile;
     }
     
     public function getId(): ?int

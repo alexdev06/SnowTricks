@@ -43,20 +43,27 @@ class TrickType extends AbstractType
             ])
 
             ->add('imageMainFile', FileType::class, [
+                'mapped' => false,
                 'label' => 'Image de fond',
-                'mapped' => false
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Ajouter une image de fond'
+                ]
             ])
 
             ->add('images', CollectionType::class, [
                 'entry_type' => ImageType::class,
-                'allow_add' => true
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true
             ])
 
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,
-                'allow_add' => true
+                'required' => false,
+                'allow_add' => true,
+                'allow_delete' => true
             ]);
-
     }
 
     public function configureOptions(OptionsResolver $resolver)

@@ -26,7 +26,6 @@
 .card-class {
     margin-top: 100px;
     margin-bottom: 100px;
-
 }
 
 #background-show {
@@ -35,33 +34,80 @@
     background-repeat: no-repeat;
     background-position: top;
     padding-top: 100px;
-    
-
 }
 
- .video-import iframe {
-     height: 200px;
-     width: 100%;
-     box-shadow: 5px 5px 5px grey;
+.video-import iframe {
+    height: 200px;
+    width: 100%;
+    box-shadow: 5px 5px 5px grey;
  }
 
- .carousel-item {
-     height: 60vh;
+.carousel-item {
+    height: 70vh;
  }
- .carousel-item iframe {
+.carousel-item iframe {
     height: 100%;
     width: 100%;
  }
 
- #carouselShow {
-     margin: -15px;
+#carouselShow {
+    margin: -15px;
  }
 
- .content-box {
+.content-box {
     box-shadow: 3px 3px 30px;
     padding: 15px;
+    background-color: white;
  }
 
- .card-body a {
-     color: grey;
+.card-body a {
+    color: grey;
  }
+
+.flash-message {
+    text-shadow: none;
+    font-weight: 600;
+    font-size: 1.2em;
+ }
+.icons-style {
+    background-color: rgba(255,255,255,0.7);
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+}
+
+.icons-edit {
+    position: absolute;
+    background-color: rgba(255,255,255,0.7);
+    border: 1px solid lightgray;
+    border-radius: 5px;
+ }
+
+.icons-edit a:hover, .icons-style a:hover {
+    text-decoration: none;
+}
+
+.icons-imageMain {
+    right: 10px;
+    top: 10px;
+    z-index: 1 !important;
+}
+
+.icons-vignet {
+    right: 20px;
+    bottom: 10px;
+}
+
+@media screen and (max-width: 1280px) {
+
+    .content-box {
+        box-shadow: none;
+        padding: 15px;
+        background-color: white;
+    }
+
+    #background-show {
+        padding-top: 0;
+        background-image: none;
+    }
+
+}

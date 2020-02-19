@@ -13,7 +13,7 @@
                         <div class="alert alert-danger">Le compte n'a pas été validé ou le nom d'utilisateur ou le mot de passe est incorrect !</div>
                     {% endif %}
                     {% for label, messages in app.flashes %}
-                        <div class="alert alert-{{ label }}">
+                        <div class="flash-message alert alert-{{ label }}">
                             {% for message in messages %}
                             <div>{{ message }}</div>
                             {% endfor %}

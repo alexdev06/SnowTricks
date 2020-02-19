@@ -1,0 +1,225 @@
+{% extends 'base.html.twig' %}
+
+{% block title%}Modification du trick{{ trick.name }}{% endblock %}
+
+{% form_theme form _self %}
+
+{% block body %}
+
+<div id="background-show">
+    <div class="container content-box">
+
+        <section id="editMainImage">
+            <div style="margin: -15px; position: relative">
+                <img src="/uploads/images/{{ imageMain }}" class="d-block w-100 h-100 img-fluid" alt="image de présentation du trick {{ trick.name }}" >
+                <div class="icons-edit icons-imageMain">
+                    <a id="but-img" href="#list">
+                        <img  src="/icons/icons/pencil.svg" width="24px" height="24px" alt="trash_icon" title="Modifier l'image de fond">
+                    </a>
+                    <a href="#" class="deleting">
+                        <img src="/icons/icons/trash.svg" width="24px" height="24px" alt="pencil_icon">
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="editMedias">
+            <h1 class="my-5 text-center">Modification du trick : {{ trick.name }}</h1>
+            <div id="list" class="row my-3">
+                {% for img in trick.images %}
+                    <div class="col-md-3 mb-2" id="{{ img.id }}img">
+                        <img src="/uploads/images/{{ img.filename }}" alt="" style="height: 200px; width: 100%; display: block; box-shadow: 5px 5px 5px grey;" />
+                        <div class="icons-edit icons-vignet">
+                            <a href="#">
+                                <img src="/icons/icons/pencil.svg" width="22px" height="22px" alt="trash_icon" title="Modifier l'image">
+                            </a>
+                            <a id="{{img.id}}"class="js-img-delete" href="{{ path('image_remove', {'id' : img.id}) }}" data-action="delete" data-target="#block_trick_images_{{ loop.index0 }}" >
+                                <img src="/icons/icons/trash.svg" width="22px" height="22px" alt="pencil_icon" title="supprimer l'image">
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% for video in trick.videos %}
+                    <div class="col-md-3 video-import mb-2" id="{{ video.id }}video">
+                        {{ video.embedHtml | raw }}
+                        <div class="icons-edit icons-vignet">
+                            <a href="#">
+                                <img  src="/icons/icons/pencil.svg" width="22px" height="22px" alt="trash_icon" title="Modifier la video">
+                            </a>
+                            <a id="{{video.id}}" class="js-video-delete" href="{{ path('video_remove', {'id' : video.id}) }}" data-action="delete" data-target="#block_trick_videos_{{ loop.index0 }}" >
+                                <img  src="/icons/icons/trash.svg" width="22px" height="22px" alt="pencil_icon" title="supprimer la video">
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="row text-center mt-4" style="font-size: 0.8em">
+                <div class="col">Créé le : {{ trick.createdAt | date('d/m/Y à H:i') }}</div>
+                <div class="col">Catégorie : {{ trick.category.name }}</div>
+                {% if trick.modifiedAt %}
+                <div class="col">Modifié le : {{ trick.modifiedAt | date('d/m/Y à H:i') }}</div>
+                {% endif %}
+            </div>
+        </section>
+ 
+        <hr>
+
+        {# Form #}
+        <section id="editForm" class="my-5 mx-4 my-3">
+            <h3 class="mb-4">Modifier les médias</h3>
+            {{ form_start(form) }}
+            {{ form_row(form.imageMainFile) }}
+            <div class="row bg-light " id="medias">
+                <div class="col-md-6">
+                    {{ form_row(form.images) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form_row(form.videos) }}
+                </div>
+            </div>
+            <h3 class="mt-5" >Modifier les textes</h3>
+            <div class="row mt-4 py-3">
+                <div class="col-8 bg-light">
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form_row(form.description) }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            {{ form_row(form.category) }}
+                        </div>
+                    </div>
+                    <div style="display: none">
+                        {{ form_row(form.name) }}
+                    </div>
+                    <div class="text-right my-5">
+                        <button type="submit" class="btn btn-success">Modifier le trick !</button>
+                        <a href="{{ path('trick_delete', {'slug' : trick.slug}) }}" type="button" class="btn btn-danger deleting ml-4">Supprimer le trick !</a>
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </section>
+        
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+{# form theme #}
+
+{% block _trick_images_widget %} 
+    <p>Ajouter ou supprimer des images</p>
+
+    {{ form_widget(form) }}
+
+    <div class="form-group">
+        <button type="button" id="add-image" class="btn btn-primary">Ajouter une image</button>
+    </div>
+{% endblock %}
+
+{% block _trick_images_entry_row %}
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block _trick_images_entry_widget %}
+<div class="form-group" id="block_{{id}}">
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <div class="col">
+                    {{ form_widget(form.imageFile) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <button type="button" data-action="delete" data-target="#block_{{id}}" class=" btn btn-danger">X</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block _trick_videos_widget %} 
+    <p>Ajouter vos liens vers des videos (facultatif)</p>
+
+    {{ form_widget(form) }}
+
+    <div class="form-group">
+        <button type="button" id="add-video" class="btn btn-primary">Ajouter une video</button>
+    </div>
+{% endblock %}
+
+{% block _trick_videos_entry_row %}
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block _trick_videos_entry_widget %}
+<div class="form-group" id="block_{{id}}">
+    <div class="row">
+        <div class="col-10">
+            <div class="row">
+                <div class="col">
+                    {{ form_widget(form.embedHtml) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-2">
+            <button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger">X</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="/script/delete_medias.js"></script>
+
+<script>
+$(function() {
+
+    $('#but-img').click(function() {
+        $('#trick_imageMainFile').click();
+    });
+    
+
+    $('#add-image').click(function(){
+        const index = $('#trick_images div.form-group').length;
+        const tmpl = $('#trick_images').data('prototype').replace(/__name__/g, index);
+        $('#trick_images').append(tmpl);
+        handleDeleteButtons()
+    });
+
+    $('#add-video').click(function(){
+        const index = $('#trick_videos div.form-group').length;
+        const tmpl = $('#trick_videos').data('prototype').replace(/__name__/g, index);
+        $('#trick_videos').append(tmpl);
+        handleDeleteButtons()
+    });
+
+    function handleDeleteButtons() {
+        $('[data-action="delete"]').click(function() {
+            const target = this.dataset.target;
+            $(target).remove();
+        })
+    }
+
+    function updateCounter() {
+        const count = $('#trick_images div.form-group').length;
+        $('#widgets-counter').val(count);
+    }
+
+    updateCounter();
+    handleDeleteButtons();
+
+
+     $(document).on('change', '.custom-file-input', function () {
+    let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');
+    $(this).parent('.custom-file').find('.custom-file-label').text(fileName);
+    }); 
+});
+</script>
+{% endblock %}

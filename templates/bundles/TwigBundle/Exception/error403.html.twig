@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Accès non autorisé{% endblock %}
+{% block body %}
+<div class="container text-center mt-4">
+    <h1>Vous n'êtes pas autorisé à accéder à cette partie du site !</h1>
+    <p>L'accès à cette partie du site est réservé aux utilisateurs authentifiés!<br />
+    </p>
+    <div class="mt-5">
+        <a href="{{path('homepage')}}" class="btn btn-primary">Retournez à l'accueil </a>
+        <a href="{{path('account_login')}}" class="btn btn-success">Se connecter</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+{% block title %}Erreur inattendue {% endblock %}
+{% block body %}
+<div class="container text-center mt-4">
+    <h1>Erreur !</h1>
+    <p>Une erreur inattendue vient de se produire, pour retournez à la page d'accueil, cliquez sur le lien ci-dessous.<br />
+    Si le problème persiste, merci de contacter un administrateur.
+    </p>
+    <div class="mt-5">
+        <a href="{{path('homepage')}}" class="btn btn-primary">Retournez à l'accueil </a>
+    </div>
+</div>
+{% endblock %}

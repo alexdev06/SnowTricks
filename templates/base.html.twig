@@ -10,12 +10,11 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light main-nav">
             <a class="navbar-brand" href="{{ path('homepage') }}">SnowTricks !</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarColor03">
                 <ul class="navbar-nav ml-auto">
                     {% if app.user %}
@@ -23,7 +22,7 @@
                         <a class="nav-link" href="{{ path('trick_create') }}">Ajouter un trick</a>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ path('account_logout') }}" class="nav-link">Déconnexion</a>
+                        <a  class="nav-link" href="{{ path('account_logout') }}">Déconnexion</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
@@ -49,12 +48,58 @@
 
         {% block body %}{% endblock %}
 
+        <nav class="fixed-bottom bg-light bottom-nav">
+           <div class="d-flex justify-content-around">
+                <a href="{{ path('homepage') }}">
+                    <img src="/icons/icons/house.svg" alt="accueil" title="accueil" width="48px" height="48px" display="inline-block">
+                </a>
+                {% if app.user %}
+                <a href="{{ path('trick_create') }}">
+                    <img src="/icons/icons/document-richtext.svg" alt="ajouter un trick" title="ajouter un trick" width="48px" height="48px" display="inline-block">
+                </a>
+                <a href="{{ path('account_logout') }}">
+                    <img src="/icons/icons/unlock.svg" alt="déconnexion" title="déconnexion" width="48px" height="48px" >
+                </a>
+                {% else %}
+                <a href="{{ path('account_register') }}">
+                    <img src="/icons/icons/bookmark.svg" alt="inscription" title="inscription" width="48px" height="48px" display="inline-block">
+                </a>
+                <a href="{{ path('account_login') }}">
+                    <img src="/icons/icons/person.svg" alt="connexion" title="connexion" width="48px" height="48px" >
+                </a>
+                {% endif %}
+            </div>
+        </nav>
+
         <footer class="mt-5 bg-light py-5 text-center">
             <p>Copyright SnowTricks !</p>
         </footer>
         <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        {# <script>
+                (function($) {
+                
+                function mediaSize() { 
+                    /* Set the matchMedia */
+                    if (window.matchMedia('(min-width: 768px)').matches) {
+                    /* Changes when we reach the min-width  */
+                        $('.bottom-nav').hide();
+                       
+
+                    } else {
+                    /* Reset for CSS changes – Still need a better way to do this! */
+                       
+                    }
+                };
+                
+                /* Call the function */
+            mediaSize();
+            /* Attach the function to the resize event listener */
+ 
+                
+            })(jQuery);
+        </script> #}
         {% block javascripts %}
         {% endblock %}
     </body>

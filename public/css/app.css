@@ -1,3 +1,7 @@
+.bottom-nav {
+    display: none;
+}
+
 .jumbotron-home {
     background-image: url('../images/head_snow.jpg');
     background-size: cover;
@@ -108,6 +112,18 @@
     #background-show {
         padding-top: 0;
         background-image: none;
+    }
+
+}
+
+@media screen and (max-width: 768px) {
+
+    .main-nav {
+        display: none;
+    }
+
+    .bottom-nav {
+        display: initial;
     }
 
 }

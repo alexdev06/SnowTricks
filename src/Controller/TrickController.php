@@ -42,6 +42,20 @@ class TrickController extends AbstractController
     }
 
     /**
+     * @Route("/{start}", name="more_tricks", requirements={"start": "\d+"})
+     */
+    public function moreTricks(TrickRepository $repo, $start = 8)
+    {
+        $tricks = $repo->findBy([], [
+            'createdAt' => 'DESC'
+        ], 8, $start);
+
+        return $this->render('trick/moreTricks.html.twig', [
+            'tricks' => $tricks
+        ]);
+    }
+
+    /**
      * @Route("/trick/{slug}", name="trick_show")
      */
     public function show(TrickRepository $repo, $slug, Request $request, EntityManagerInterface $manager)
@@ -62,6 +76,18 @@ class TrickController extends AbstractController
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
             'form'  => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/trick/{slug}/{start}", name="more_comments", requirements={"start": "\d+"})
+     */
+    public function moreComments(TrickRepository $repo, $slug, $start = 10)
+    {
+        $trick = $repo->findOneBySlug($slug);
+        return $this->render('trick/moreComments.html.twig', [
+            'trick' => $trick,
+            'start' => $start
         ]);
     }
 
@@ -178,7 +204,7 @@ class TrickController extends AbstractController
                 if ($image->getImageFile()) {
                     $originalFilename = pathinfo($image->getImageFile()->getClientOriginalName(), PATHINFO_FILENAME);
                     $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                    $filename = $safeFilename . '_' . uniqid() . '_' . $image->getImageFile()->guessExtension();
+                    $filename = $safeFilename . '_' . uniqid() . '.' . $image->getImageFile()->guessExtension();
                     
                     try {
                         $image->getImageFile()->move($this->getParameter('image_directory'), $filename);
@@ -259,5 +285,4 @@ class TrickController extends AbstractController
             'message' => 'La video a bien été supprimée !'
         ], 200);
     }
-
 }

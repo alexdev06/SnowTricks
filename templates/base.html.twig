@@ -36,16 +36,6 @@
             </div>
         </nav>
 
-       {# {% for label, messages in app.flashes %}
-       <div class="container">
-            <div class="alert alert-{{ label }}">
-                {% for message in messages %}
-                <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-       </div>
-       {% endfor %}  #}
-
         {% block body %}{% endblock %}
 
         <nav class="fixed-bottom bg-light bottom-nav">
@@ -71,35 +61,18 @@
             </div>
         </nav>
 
+        {# navigation scroll arrow #}
+        <a class="arrow-nav" href="#" id="to-top">
+            <img src="/icons/icons/chevron-up.svg" alt="chevron-up" width="48px" height="48px">
+        </a>
+
         <footer class="mt-5 bg-light py-5 text-center">
             <p>Copyright SnowTricks !</p>
         </footer>
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-        {# <script>
-                (function($) {
-                
-                function mediaSize() { 
-                    /* Set the matchMedia */
-                    if (window.matchMedia('(min-width: 768px)').matches) {
-                    /* Changes when we reach the min-width  */
-                        $('.bottom-nav').hide();
-                       
-
-                    } else {
-                    /* Reset for CSS changes – Still need a better way to do this! */
-                       
-                    }
-                };
-                
-                /* Call the function */
-            mediaSize();
-            /* Attach the function to the resize event listener */
- 
-                
-            })(jQuery);
-        </script> #}
+        <script src="/script/scroll-navigation.js"></script>
         {% block javascripts %}
         {% endblock %}
     </body>

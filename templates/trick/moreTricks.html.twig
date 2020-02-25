@@ -1,0 +1,30 @@
+{% for trick in tricks %}
+<div class="col-sm-6 col-lg-4 col-xl-3">
+    <div class="card bg-light mb-3">
+        <a href="{{ path('trick_show', {'slug': trick.slug}) }}">
+            <img src="/uploads/images/{{ trick.imageMain }}" alt="Image du trick {{ trick.name }}" style="height: 200px; width: 100%; display: block">
+        </a>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-7">
+                <a href="{{ path('trick_show' , {'slug': trick.slug}) }}">
+                    <h2 class="h6 card-title">{{ trick.name }}</h5>
+                </a>
+                </div>
+                {% if app.user %}
+                <div class="col-5">
+                    <div class="icons-style icons-edit" style="display: inline-block">
+                        <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
+                            <img src="/icons/icons/pencil.svg" width="24px" height="24px" alt="icone de modification" title="Modifier le trick">
+                        </a>
+                        <a href="{{ path('trick_delete', {'slug': trick.slug}) }}">
+                            <img src="/icons/icons/trash.svg" width="24px" height="24px" alt="icone de suppression" title="Supprimer le trick" onclick="confirm(\'Valider votre choix?\')">
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

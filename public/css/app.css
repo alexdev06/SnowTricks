@@ -49,6 +49,7 @@
 .carousel-item {
     height: 70vh;
  }
+ 
 .carousel-item iframe {
     height: 100%;
     width: 100%;
@@ -101,6 +102,27 @@
     bottom: 10px;
 }
 
+.arrow-nav {
+    overflow: hidden;
+    z-index: 999;
+    right: 20px;
+    bottom: 20px;
+    background-color: rgba(230,230,230,0.7);
+}
+
+#to-list {
+    position: absolute;
+}
+
+#to-top {
+    position: fixed;
+    display: none;
+}
+
+#switch-medias {
+    display: none;
+}
+
 @media screen and (max-width: 1280px) {
 
     .content-box {
@@ -117,6 +139,9 @@
 }
 
 @media screen and (max-width: 768px) {
+    .carousel-item {
+        height: 40vh;
+    }
 
     .main-nav {
         display: none;
@@ -126,4 +151,15 @@
         display: initial;
     }
 
+    .arrow-nav {
+        bottom: 60px !important;
+    }
+
+    #medias {
+        display: none;
+    }
+
+    #switch-medias {
+        display: initial;
+    }
 }

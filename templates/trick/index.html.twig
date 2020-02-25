@@ -4,7 +4,7 @@
 
 {% block body %}
 <div class="jumbotron jumbotron-home text-center vertical-center d-flex align-items-center justify-content-center" >
-    <div>
+    <div id="title-block">
         <h1 class="display-3 ">SnowTricks !</h1>
         <p class="lead light">
             <a href="#list" >Le site de référence sur les tricks de snowboard.</a>
@@ -19,17 +19,15 @@
     </div>
 </div>
 
-
 <div class="container">
- 
     <h1 id="list">Liste des tricks !</h1>
     <p class="my-4">Il y a actuellement {{ tricks | length}} tricks dans la base de données!</p>
     
-    <div class="row">
-        {% for trick in tricks | slice(0,12) %}
+    <div class="row" id="tricks-list">
+        {% for trick in tricks | slice(0,8) %}
         <div class="col-sm-6 col-lg-4 col-xl-3">
             <div class="card bg-light mb-3">
-                <a href="{{ path('trick_show' , {'slug': trick.slug}) }}">
+                <a href="{{ path('trick_show', {'slug': trick.slug}) }}">
                     <img src="/uploads/images/{{ trick.imageMain }}" alt="Image du trick {{ trick.name }}" style="height: 200px; width: 100%; display: block">
                 </a>
                 <div class="card-body">
@@ -58,44 +56,48 @@
         {% endfor %}
     </div>
 
-    {% if tricks | length > 12 %}
+    {% if tricks | length > 8 %}
     <div class="d-flex justify-content-center my-4">
-        <a class="btn btn-light" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <a id="moreTricks" class="btn btn-light" >
             Afficher plus de tricks !
         </a>
-    </div>
-
-    <div class="collapse" id="collapseExample">
-        <div class="row">
-            {% for trick in tricks | slice(12, tricks | length) %}
-            <div class="col-lg-3">
-                <div class="card bg-light mb-3">
-                    <a href="{{ path('trick_show' , {'slug': trick.slug}) }}">
-                        <img src="{{ trick.imageMain }}" alt="Image du trick {{ trick.name }}" style="height: 150px; width: 100%; display: block">
-                    </a>
-                    <div class="card-body">
-                        <div class="row">
-                            <a href="{{ path('trick_show' , {'slug': trick.slug}) }}">
-                                <h5 class="card-title">{{ trick.name }}</h5>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
     </div>
     {% endif %} 
 </div>
 
+{# navigation arrow #}
+<a class="arrow-nav" href="#" id="to-list">
+    <img src="/icons/icons/chevron-down.svg" alt="chevron-down" width="48px" height="48px">
+</a>
+
 {% endblock %}
 
 {% block javascripts %}
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
-		jQuery('.to-top').click(function(event) {
-			event.preventDefault();
-			jQuery('html').animate({scrollTop: 0}, duration);
-			return false;
-		})
+    click = 0;
+    function moreTricks(event) {
+        event.preventDefault();
+        click++;
+        var start = 8 * click;
+        const url = "{{ path('more_tricks') }}" + start;
+        axios.get(url).then(function(response) {
+            $("#tricks-list").append(response.data);
+            $("#arrow-up").show();
+        }).catch(function (error) {
+            if (response.status === 403) {
+                window.alert("Vous n'êtes pas autorisé à effectuer cette action !");
+            }
+            else if (response.status === 404) {
+                window.alert("La page appelé n'existe pas");
+            }
+            else {
+                window.alert("Une erreur est survenue !");
+            }
+        });
+    }
+    document.getElementById("moreTricks").addEventListener("click", moreTricks);
+
 </script>
+
 {% endblock %}

@@ -41,7 +41,7 @@
                 {% endfor %}
                 {% for video in trick.videos %}
                     <div class="col-md-3 video-import mb-2" id="{{ video.id }}video">
-                        {{ video.embedHtml | raw }}
+                        <iframe id="video{{ video.id }}" width="100%" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         <div class="icons-edit icons-vignet">
                             <a href="#">
                                 <img  src="/icons/icons/pencil.svg" width="22px" height="22px" alt="trash_icon" title="Modifier la video">
@@ -51,6 +51,18 @@
                             </a>
                         </div>
                     </div>
+                    <script>
+                        var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                        var url = "{{ video.url }}";
+                        var match = url.match(regExp);
+                        if (match && match[2].length == 11) 
+                        {
+                            var id = match[2];
+                            var embedlink = "https://www.youtube.com/embed/" + id;
+                            var iframe = document.getElementById("video{{ video.id }}");
+                            iframe.src = embedlink;
+                        }
+                    </script>
                 {% endfor %}
             </div>
             <div class="row text-center mt-4" style="font-size: 0.8em">
@@ -166,7 +178,7 @@
         <div class="col-10">
             <div class="row">
                 <div class="col">
-                    {{ form_widget(form.embedHtml) }}
+                    {{ form_widget(form.url) }}
                 </div>
             </div>
         </div>

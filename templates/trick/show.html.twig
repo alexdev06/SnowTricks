@@ -39,7 +39,7 @@
                     {% endfor %}
                     {% for video in trick.videos %}
                         <div class="carousel-item">
-                            {{ video.embedHtml | raw }}
+                             <iframe id="video{{ video.id }}-carousel" width="100%" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                             {% if app.user %}
                             <div class="icons-edit icons-imageMain">
                                 <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
@@ -51,6 +51,18 @@
                             </div>
                             {% endif %}
                         </div>
+                        <script>
+                        var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                        var url = "{{ video.url }}";
+                        var match = url.match(regExp);
+                        if (match && match[2].length == 11) 
+                        {
+                            var id = match[2];
+                            var embedlink = "https://www.youtube.com/embed/" + id;
+                            var iframe = document.getElementById("video{{ video.id }}-carousel");
+                            iframe.src = embedlink;
+                        }
+                    </script>
                     {% endfor %}
                     <a class="carousel-control-prev my-5" href="#carouselShow" role="button" data-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -74,8 +86,20 @@
                 {% endfor %}
                 {% for video in trick.videos %}
                     <div class="col-md-3 video-import mb-2">
-                        {{ video.embedHtml | raw }}
+                        <iframe id="video{{ video.id }}" width="100%" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                     </div>
+                    <script>
+                        var regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+                        var url = "{{ video.url }}";
+                        var match = url.match(regExp);
+                        if (match && match[2].length == 11) 
+                        {
+                            var id = match[2];
+                            var embedlink = "https://www.youtube.com/embed/" + id;
+                            var iframe = document.getElementById("video{{ video.id }}");
+                            iframe.src = embedlink;
+                        }
+                    </script>
                 {% endfor %}
             </div>
 

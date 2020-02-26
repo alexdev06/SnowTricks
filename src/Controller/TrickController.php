@@ -2,20 +2,15 @@
 
 namespace App\Controller;
 
-use DateTime;
 use App\Entity\Image;
 use App\Entity\Trick;
 use App\Entity\Video;
 use App\Entity\Comment;
-use App\Form\ImageType;
 use App\Form\TrickType;
 use App\Form\CommentType;
-use App\Form\TrickEditType;
-use App\Form\RegistrationType;
 use App\Repository\ImageRepository;
 use App\Repository\TrickRepository;
 use App\Repository\VideoRepository;
-use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\File;
@@ -44,11 +39,11 @@ class TrickController extends AbstractController
     /**
      * @Route("/{start}", name="more_tricks", requirements={"start": "\d+"})
      */
-    public function moreTricks(TrickRepository $repo, $start = 8)
+    public function moreTricks(TrickRepository $repo, $start = 12)
     {
         $tricks = $repo->findBy([], [
             'createdAt' => 'DESC'
-        ], 8, $start);
+        ], 12, $start);
 
         return $this->render('trick/moreTricks.html.twig', [
             'tricks' => $tricks
@@ -108,7 +103,6 @@ class TrickController extends AbstractController
                 $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
                 $filename = $safeFilename . '_' . uniqid() . '_' . $uploadedFile->guessExtension();
-
                 try {
                     $uploadedFile->move($this->getParameter('image_directory'), $filename);
                 } catch (FileException $e) {
@@ -129,7 +123,6 @@ class TrickController extends AbstractController
                     $originalFilename = pathinfo($image->getImageFile()->getClientOriginalName(), PATHINFO_FILENAME);
                     $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
                     $filename = $safeFilename . '_' . uniqid() . '_' . $image->getImageFile()->guessExtension();
-                    
                     try {
                         $image->getImageFile()->move($this->getParameter('image_directory'), $filename);
                     } catch (FileException $e) {

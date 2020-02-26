@@ -18,11 +18,13 @@
 </div>
 {% endblock %}
 
+
+{# form theme #}
+
+{# images input custom theme #}
 {% block _trick_images_widget %} 
     <p>Ajouter vos images (facultatif)</p>
-
     {{ form_widget(form) }}
-
     <div class="form-group">
         <button type="button" id="add-image" class="btn btn-primary">Ajouter une image</button>
     </div>
@@ -49,11 +51,10 @@
 </div>
 {% endblock %}
 
+{# video input custom theme #}
 {% block _trick_videos_widget %} 
     <p>Ajouter vos liens vers des videos (facultatif)</p>
-
     {{ form_widget(form) }}
-
     <div class="form-group">
         <button type="button" id="add-video" class="btn btn-primary">Ajouter une video</button>
     </div>
@@ -82,26 +83,20 @@
 
 {% block javascripts %}
 <script>
-    $('#add-image').click(function(){
+    $('#add-image').click(function() {
         const index = $('#trick_images div.form-group').length;
-
         const tmpl = $('#trick_images').data('prototype').replace(/__name__/g, index);
-
         $('#trick_images').append(tmpl);
 
         handleDeleteButtons()
-       
     });
 
-        $('#add-video').click(function(){
+    $('#add-video').click(function() {
         const index = $('#trick_videos div.form-group').length;
-
         const tmpl = $('#trick_videos').data('prototype').replace(/__name__/g, index);
-
         $('#trick_videos').append(tmpl);
 
         handleDeleteButtons()
-       
     });
 
     function handleDeleteButtons() {
@@ -112,7 +107,6 @@
     }
 
     handleDeleteButtons();
-
 
     $(document).on('change', '.custom-file-input', function () {
     let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');

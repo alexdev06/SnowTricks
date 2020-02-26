@@ -28,7 +28,7 @@
             <div id="list" class="row my-3">
                 {% for img in trick.images %}
                     <div class="col-md-3 mb-2" id="{{ img.id }}img">
-                        <img src="/uploads/images/{{ img.filename }}" alt="" style="height: 200px; width: 100%; display: block; box-shadow: 5px 5px 5px grey;" />
+                        <img src="/uploads/images/{{ img.filename }}" alt="Une image d'illustration pour le trick {{ trick.name }}" style="height: 200px; width: 100%; display: block; box-shadow: 5px 5px 5px grey;" />
                         <div class="icons-edit icons-vignet">
                             <a href="#">
                                 <img src="/icons/icons/pencil.svg" width="22px" height="22px" alt="trash_icon" title="Modifier l'image">
@@ -76,7 +76,7 @@
  
         <hr>
 
-        {# Form #}
+ {# Form #}
         <section id="editForm" class="my-5 mx-4 my-3">
             <h3 class="mb-4">Modifier les médias</h3>
             {{ form_start(form) }}
@@ -121,11 +121,9 @@
     </a>
 {% endblock %}
 
-
-
-
-
 {# form theme #}
+
+{# images input custom theme #}
 
 {% block _trick_images_widget %} 
     <p>Ajouter ou supprimer des images</p>
@@ -158,6 +156,7 @@
 </div>
 {% endblock %}
 
+{# videos input custom theme #}
 {% block _trick_videos_widget %} 
     <p>Ajouter vos liens vers des videos (facultatif)</p>
 
@@ -193,7 +192,6 @@
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="/script/delete_medias.js"></script>
 
-
 <script>
 $(function() {
 
@@ -201,7 +199,6 @@ $(function() {
         $('#trick_imageMainFile').click();
     });
     
-
     $('#add-image').click(function(){
         const index = $('#trick_images div.form-group').length;
         const tmpl = $('#trick_images').data('prototype').replace(/__name__/g, index);
@@ -230,7 +227,6 @@ $(function() {
 
     updateCounter();
     handleDeleteButtons();
-
 
      $(document).on('change', '.custom-file-input', function () {
     let fileName = $(this).val().replace(/\\/g, '/').replace(/.*\//, '');

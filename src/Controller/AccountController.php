@@ -11,7 +11,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -47,9 +46,7 @@ class AccountController extends AbstractController
     public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, TokenGeneratorInterface $tokenGenerator, MailerInterface $mailer)
     {
         $user = new User();
-
         $form = $this->createForm(RegistrationType::class, $user);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -75,7 +72,7 @@ class AccountController extends AbstractController
                     $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
                     $newFilename = $safeFilename . '-' . uniqid() . '.' . $avatarFile->guessExtension();
                     try {
-                        $avatarFile->move($this->getParameter('image_directory'), $newFilename);
+                        $avatarFile->move($this->getParameter('avatar_directory'), $newFilename);
 
                     } catch (FileException $e) {
                         // ... handle exception if something happens during file upload
@@ -96,7 +93,15 @@ class AccountController extends AbstractController
                     ->to($user->getEmail())
                     ->priority(Email::PRIORITY_HIGH)
                     ->subject('Validation de votre compte utilisateur SnowTricks')
-                    ->text("Pour valider votre inscription sur le site SnowTricks, cliquez sur le lien suivant https://127.0.0.1:8000/register/{$user->getId()}/{$user->getToken()}");
+                    ->html('<html>
+                                <body>
+                                    <p>Bonjour,<br>
+                                    Bienvenue sur le site SnowTricks! <br />
+                                    Pour valider votre inscription sur le site SnowTricks, cliquez sur le lien suivant : </p>
+                                    <p><a href="https://127.0.0.1:8000/register/' . $user->getId() . '/' . $user->getToken() . '">Validation du compte</a> <br /></p>
+                                    <p>Pour tout problème avec votre compte, veuillez contacter un administrateur à l\'adresse suivante: xxxxx@xxx.fr </p>
+                                </body>
+                                </html>');
 
                 $mailer->send($email);
                 $this->addFlash(
@@ -178,7 +183,15 @@ class AccountController extends AbstractController
                   ->to($user->getEmail())
                   ->priority(Email::PRIORITY_HIGH)
                   ->subject('Demande de réinitialisation de mot de passe')
-                  ->text("Pour réinitialiser votre mot de passe, cliquez sur le lien suivant https://127.0.0.1:8000/reset/{$user->getId()}/{$user->getToken()}");
+                  ->html('<html>
+                                <body>
+                                    <p>Bonjour,<br>
+                                    Vous avez demandé à réinitialiser le mot de passe de votre compte SnowTricks! <br />
+                                    Pour procéder à la modification du mot de passe, cliquez sur le lien suivant : </p>
+                                    <p><a href="https://127.0.0.1:8000/reset/' . $user->getId() . '/' . $user->getToken() . '">Modification du mot de passe</a> <br /></p>
+                                    <p>Pour tout problème avec votre compte, veuillez contacter un administrateur à l\'adresse suivante: xxxxx@xxx.fr </p>
+                                </body>
+                                </html>');
 
             $mailer->send($email);
 

@@ -17,31 +17,19 @@ class Video
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $embedHtml;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Trick", inversedBy="videos")
      * @ORM\JoinColumn(nullable=false)
      */
     private $trick;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $url;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getEmbedHtml(): ?string
-    {
-        return $this->embedHtml;
-    }
-
-    public function setEmbedHtml(string $embedHtml): self
-    {
-        $this->embedHtml = $embedHtml;
-
-        return $this;
     }
 
     public function getTrick(): ?Trick
@@ -52,6 +40,18 @@ class Video
     public function setTrick(?Trick $trick): self
     {
         $this->trick = $trick;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
 
         return $this;
     }

@@ -11,6 +11,7 @@ use App\Form\CommentType;
 use App\Repository\ImageRepository;
 use App\Repository\TrickRepository;
 use App\Repository\VideoRepository;
+use App\Service\ImageUploadManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\File\File;
@@ -18,7 +19,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class TrickController extends AbstractController
 {
@@ -90,7 +90,7 @@ class TrickController extends AbstractController
      * @Route("/create", name="trick_create")
      * @IsGranted("ROLE_USER")
      */
-    public function create(Request $request, EntityManagerInterface $manager)
+    public function create(Request $request, EntityManagerInterface $manager, ImageUploadManager $imageUploadManager)
     {
         $trick = new Trick();
         $form = $this->createForm(TrickType::class, $trick);
@@ -100,36 +100,26 @@ class TrickController extends AbstractController
             /** @var UploadedFile $imageMainFile */
             $uploadedFile = $form->get('imageMainFile')->getData();
             if ($uploadedFile) {
-                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                $filename = $safeFilename . '_' . uniqid() . '_' . $uploadedFile->guessExtension();
-                try {
-                    $uploadedFile->move($this->getParameter('image_directory'), $filename);
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
+                // ImageUploadManager service which renames and saves trick imageMain
+                $filename = $imageUploadManager->imageFile($uploadedFile);
                 $trick->setImageMain($filename);
             }
 
             foreach ($trick->getVideos() as $video) {
                 if ($video) {
                     $video->setTrick($trick);
+
                     $manager->persist($video);
                 }
             }
 
             foreach ($trick->getImages() as $image) {
                 if ($image) {
-                    $originalFilename = pathinfo($image->getImageFile()->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                    $filename = $safeFilename . '_' . uniqid() . '_' . $image->getImageFile()->guessExtension();
-                    try {
-                        $image->getImageFile()->move($this->getParameter('image_directory'), $filename);
-                    } catch (FileException $e) {
-                        // ... handle exception if something happens during file upload
-                    }
+                    // ImageUploadManager service which renames and saves trick images
+                    $filename = $imageUploadManager->imageFile($image->getImageFile());
+                    $image->setFilename($filename);
                     $image->setTrick($trick);
-                    $image->setFilename($filename); 
+
                     $manager->persist($image);
                 }
             }
@@ -155,7 +145,7 @@ class TrickController extends AbstractController
      * @Route("/trick/{slug}/edit", name="trick_edit")
      * @IsGranted("ROLE_USER")
      */
-    public function edit(Trick $trick, Request $request, EntityManagerInterface $manager)
+    public function edit(Trick $trick, Request $request, EntityManagerInterface $manager, ImageUploadManager $imageUploadManager)
     {
         // on récupère un nom de fichier qui est l'entrée en db.
         $imageMain = $trick->getImageMain();
@@ -170,16 +160,8 @@ class TrickController extends AbstractController
             /** @var Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile*/
             $uploadedFile = $form->get('imageMainFile')->getData();
             if ($uploadedFile) {
-                $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                $filename = $safeFilename . '_' . uniqid() . '_' . $uploadedFile->guessExtension();
-                
-                try {
-                    $uploadedFile->move($this->getParameter('image_directory'), $filename);
-                } catch (FileException $e) {
-                    // ... handle exception if something happens during file upload
-                }
-                
+                // ImageUploadManager service which renames and saves trick imageMain
+                $filename = $imageUploadManager->imageFile($uploadedFile);
                 $trick->setImageMain($filename);
             } else {
                 $trick->setImageMain($imageMain);
@@ -195,18 +177,10 @@ class TrickController extends AbstractController
             $uploadedCollection = $form->get('images')->getData();
             foreach ($uploadedCollection as $image) {
                 if ($image->getImageFile()) {
-                    $originalFilename = pathinfo($image->getImageFile()->getClientOriginalName(), PATHINFO_FILENAME);
-                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-                    $filename = $safeFilename . '_' . uniqid() . '.' . $image->getImageFile()->guessExtension();
-                    
-                    try {
-                        $image->getImageFile()->move($this->getParameter('image_directory'), $filename);
-                        
-                    } catch (FileException $e) {
-                        // ... handle exception if something happens during file upload
-                    }
+                   // ImageUploadManager service which renames and saves trick images
+                    $filename = $imageUploadManager->imageFile($image->getImageFile());
+                    $image->setFilename($filename);
                     $image->setTrick($trick);
-                    $image->setFilename($filename); 
                     $manager->persist($image);
                 }
             }

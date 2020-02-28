@@ -31,7 +31,7 @@ class Trick
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min = 2, minMessage = "Le nom du trick doit faire au moins 2 caractères !")
-     * @Assert\Length(max = 20, maxMessage = "Le nom du trick ne doit pas faire plus de 20 caractères !")
+     * @Assert\Length(max = 40, maxMessage = "Le nom du trick ne doit pas faire plus de 40 caractères !")
      * 
      * 
      */

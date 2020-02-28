@@ -8,15 +8,14 @@
 
 <div id="background-show">
     <div class="container content-box">
-
         <section id="editMainImage">
-            <div style="margin: -15px; position: relative">
+            <div style="margin: -15px; position: relative; height: 70vh">
                 <img src="/uploads/images/{{ imageMain }}" class="d-block w-100 h-100 img-fluid" alt="image de présentation du trick {{ trick.name }}" >
                 <div class="icons-edit icons-imageMain">
                     <a id="but-img" href="#list">
                         <img  src="/icons/icons/pencil.svg" width="24px" height="24px" alt="trash_icon" title="Modifier l'image de fond">
                     </a>
-                    <a href="#" class="deleting">
+                    <a href="#" class="deleting deleteb">
                         <img src="/icons/icons/trash.svg" width="24px" height="24px" alt="pencil_icon">
                     </a>
                 </div>
@@ -33,7 +32,7 @@
                             <a href="#">
                                 <img src="/icons/icons/pencil.svg" width="22px" height="22px" alt="trash_icon" title="Modifier l'image">
                             </a>
-                            <a id="{{img.id}}"class="js-img-delete" href="{{ path('image_remove', {'id' : img.id}) }}" data-action="delete" data-target="#block_trick_images_{{ loop.index0 }}" >
+                            <a id="{{img.id}}" class="js-img-delete deleteb" href="{{ path('image_remove', {'id' : img.id}) }}" data-action="delete" data-target="#block_trick_images_{{ loop.index0 }}"  >
                                 <img src="/icons/icons/trash.svg" width="22px" height="22px" alt="pencil_icon" title="supprimer l'image">
                             </a>
                         </div>
@@ -44,10 +43,10 @@
                         <iframe id="video{{ video.id }}" width="100%" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         <div class="icons-edit icons-vignet">
                             <a href="#">
-                                <img  src="/icons/icons/pencil.svg" width="22px" height="22px" alt="trash_icon" title="Modifier la video">
+                                <img src="/icons/icons/pencil.svg" width="22px" height="22px" alt="trash_icon" title="Modifier la video">
                             </a>
-                            <a id="{{video.id}}" class="js-video-delete" href="{{ path('video_remove', {'id' : video.id}) }}" data-action="delete" data-target="#block_trick_videos_{{ loop.index0 }}" >
-                                <img  src="/icons/icons/trash.svg" width="22px" height="22px" alt="pencil_icon" title="supprimer la video">
+                            <a id="{{video.id}}" class="js-video-delete deleteb" href="{{ path('video_remove', {'id' : video.id}) }}" data-action="delete" data-target="#block_trick_videos_{{ loop.index0 }}" >
+                                <img src="/icons/icons/trash.svg" width="22px" height="22px" alt="pencil_icon" title="supprimer la video">
                             </a>
                         </div>
                     </div>
@@ -216,8 +215,8 @@ $(function() {
     function handleDeleteButtons() {
         $('[data-action="delete"]').click(function() {
             const target = this.dataset.target;
-            $(target).remove();
-        })
+            $(target).remove();;
+        });
     }
 
     function updateCounter() {

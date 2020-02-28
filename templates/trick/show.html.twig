@@ -147,15 +147,18 @@
                     </div>
                 </div>
                 {% endfor %}
+            </div>
         {% else %}
             <p class="h5"><em>Pas encore de commentaire !</em></p>
         {% endif %}      
         </div>
+        {% if trick.comments | length > 10 %}
         <div class="d-flex justify-content-center my-2">
             <button class="btn btn-light" id="more-comments" type="button">
                 Afficher plus de commentaires!
             </button>
         </div>
+        {% endif %}
     </section>
      
     </div>

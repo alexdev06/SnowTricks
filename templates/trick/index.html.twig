@@ -40,7 +40,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-7">
-                            <a href="{{ path('trick_show' , {'slug': trick.slug}) }}">
+                            <a href="{{ path('trick_show', {'slug': trick.slug}) }}">
                                 <h2 class="h6 card-title">{{ trick.name }}</h5>
                             </a>
                             </div>
@@ -50,8 +50,8 @@
                                     <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
                                         <img src="/icons/icons/pencil.svg" width="24px" height="24px" alt="icone de modification" title="Modifier le trick">
                                     </a>
-                                    <a href="{{ path('trick_delete', {'slug': trick.slug}) }}">
-                                        <img src="/icons/icons/trash.svg" width="24px" height="24px" alt="icone de suppression" title="Supprimer le trick" onclick="confirm(\'Valider votre choix?\')">
+                                    <a href="{{ path('trick_delete', {'slug': trick.slug}) }}" class="js-trick-delete">
+                                        <img src="/icons/icons/trash.svg" width="24px" height="24px" alt="icone de suppression" title="Supprimer le trick">
                                     </a>
                                 </div>
                             </div>
@@ -106,6 +106,16 @@
     }
     document.getElementById("moreTricks").addEventListener("click", moreTricks);
 
+    
+</script>
+
+<script>
+$("a.js-trick-delete").click(function(e) {
+    e.preventDefault();
+    if (confirm("confirmation de la suppression du trick ?")) {
+         location.href = $(this).attr("href");
+    }
+});
 </script>
 
 {% endblock %}

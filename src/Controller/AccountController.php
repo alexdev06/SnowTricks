@@ -7,6 +7,7 @@ use App\Form\ResettingType;
 use App\Form\RegistrationType;
 use Symfony\Component\Mime\Email;
 use App\Repository\UserRepository;
+use App\Service\ImageUploadManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -38,12 +39,18 @@ class AccountController extends AbstractController
     /**
      * @Route("/logout", name="account_logout")
      */
-    public function logout() {}
+    public function logout()
+    {
+        $this->addFlash(
+            'success',
+            'Vous avez été déconnecté !'
+        );
+    }
 
     /**
      * @Route("/register", name="account_register")
      */
-    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, TokenGeneratorInterface $tokenGenerator, MailerInterface $mailer)
+    public function register(Request $request, EntityManagerInterface $manager, UserPasswordEncoderInterface $encoder, TokenGeneratorInterface $tokenGenerator, MailerInterface $mailer, ImageUploadManager $imageUploadManager)
     {
         $user = new User();
         $form = $this->createForm(RegistrationType::class, $user);
@@ -67,17 +74,8 @@ class AccountController extends AbstractController
 
                 $avatarFile = $form->get('avatarFile')->getData();
                 if ($avatarFile) {
-                    $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
-                    $renamedFilename = $user->getFirstName() . '_' . $user->getLastName() . '_' . $originalFilename;
-                    $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
-                    $newFilename = $safeFilename . '-' . uniqid() . '.' . $avatarFile->guessExtension();
-                    try {
-                        $avatarFile->move($this->getParameter('avatar_directory'), $newFilename);
-
-                    } catch (FileException $e) {
-                        // ... handle exception if something happens during file upload
-                    }
-
+                    // ImageUploadManager service which rename and save avatar image
+                    $newFilename = $imageUploadManager->avatarFile($avatarFile, $user);
                     $user->setAvatar($newFilename);
                 }
 

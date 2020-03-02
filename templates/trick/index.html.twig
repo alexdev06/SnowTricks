@@ -65,14 +65,14 @@
 
         {% if tricks | length > 12 %}
         <div class="d-flex justify-content-center my-4">
-            <a id="moreTricks" class="btn btn-light" >
+            <a id="more-tricks" class="btn btn-light" >
                 Afficher plus de tricks !
             </a>
         </div>
         {% endif %} 
     </div>
 
-    {# navigation arrow #}
+{# navigation arrow #}
     <a class="arrow-nav" href="#" id="to-list">
         <img src="/icons/icons/chevron-down.svg" alt="chevron-down" width="48px" height="48px">
     </a>
@@ -104,7 +104,7 @@
             }
         });
     }
-    document.getElementById("moreTricks").addEventListener("click", moreTricks);
+    document.getElementById("more-tricks").addEventListener("click", moreTricks);
 
     
 </script>
@@ -112,7 +112,7 @@
 <script>
 $("a.js-trick-delete").click(function(e) {
     e.preventDefault();
-    if (confirm("confirmation de la suppression du trick ?")) {
+    if (confirm("Confirmez vous la suppression du trick ?")) {
          location.href = $(this).attr("href");
     }
 });

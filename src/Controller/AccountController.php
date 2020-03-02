@@ -39,13 +39,7 @@ class AccountController extends AbstractController
     /**
      * @Route("/logout", name="account_logout")
      */
-    public function logout()
-    {
-        $this->addFlash(
-            'success',
-            'Vous avez été déconnecté !'
-        );
-    }
+    public function logout(){}
 
     /**
      * @Route("/register", name="account_register")

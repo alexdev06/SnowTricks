@@ -8,7 +8,8 @@
 
 <div id="background-show">
     <div class="container content-box">
-        <section id="editMainImage">
+{# Main image #}
+        <section id="edit-mainImage">
             <div style="margin: -15px; position: relative; height: 70vh">
                 <img src="/uploads/images/{{ imageMain }}" class="d-block w-100 h-100 img-fluid" alt="image de présentation du trick {{ trick.name }}" >
                 <div class="icons-edit icons-imageMain">
@@ -22,7 +23,8 @@
             </div>
         </section>
 
-        <section id="editMedias">
+{# Medias display with edition links #}
+        <section id="edit-medias">
             <h1 class="my-5 text-center">Modification du trick : {{ trick.name }}</h1>
             <div id="list" class="row my-3">
                 {% for img in trick.images %}
@@ -75,8 +77,8 @@
  
         <hr>
 
- {# Form #}
-        <section id="editForm" class="my-5 mx-4 my-3">
+ {# Modification forms #}
+        <section id="edit-form" class="my-5 mx-4 my-3">
             <h3 class="mb-4">Modifier les médias</h3>
             {{ form_start(form) }}
             {{ form_row(form.imageMainFile) }}

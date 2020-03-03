@@ -91,11 +91,6 @@ class User implements UserInterface
     private $token;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Role", mappedBy="users")
-     */
-    private $userRoles;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $isActive;
@@ -104,10 +99,8 @@ class User implements UserInterface
     {
         $this->comments = new ArrayCollection();
         $this->tricks = new ArrayCollection();
-        $this->userRoles = new ArrayCollection();
     }
 
-    
     public function getId(): ?int
     {
         return $this->id;
@@ -175,13 +168,7 @@ class User implements UserInterface
 
     public function getRoles()
     {
-        $roles = $this->userRoles->map(function($role){
-            return $role->getTitle();
-        })->toArray();
-
-        $roles[] = 'ROLE_USER';
-
-        return $roles;
+        return ['ROLE_USER'];
     }
 
     public function getPassword()
@@ -307,33 +294,6 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return Collection|Role[]
-     */
-    public function getUserRoles(): Collection
-    {
-        return $this->userRoles;
-    }
-
-    public function addUserRole(Role $userRole): self
-    {
-        if (!$this->userRoles->contains($userRole)) {
-            $this->userRoles[] = $userRole;
-            $userRole->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUserRole(Role $userRole): self
-    {
-        if ($this->userRoles->contains($userRole)) {
-            $this->userRoles->removeElement($userRole);
-            $userRole->removeUser($this);
-        }
-
-        return $this;
-    }
 
     public function getIsActive(): ?bool
     {

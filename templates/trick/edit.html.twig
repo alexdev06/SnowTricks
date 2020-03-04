@@ -32,10 +32,10 @@
                         <img src="/uploads/images/{{ img.filename }}" alt="Une image d'illustration pour le trick {{ trick.name }}" style="height: 200px; width: 100%; display: block; box-shadow: 5px 5px 5px grey;" />
                         <div class="icons-edit icons-vignet">
                             <a href="#">
-                                <img src="/icons/icons/pencil.svg" width="22px" height="22px" alt="trash_icon" title="Modifier l'image">
+                                <img src="/icons/icons/pencil.svg" width="22px" height="22px" alt="pencil_icon" title="Modifier l'image">
                             </a>
                             <a id="{{img.id}}" class="js-img-delete deleteb" href="{{ path('image_remove', {'id' : img.id}) }}" data-action="delete" data-target="#block_trick_images_{{ loop.index0 }}"  >
-                                <img src="/icons/icons/trash.svg" width="22px" height="22px" alt="pencil_icon" title="supprimer l'image">
+                                <img src="/icons/icons/trash.svg" width="22px" height="22px" alt="trash_icon" title="supprimer l'image">
                             </a>
                         </div>
                     </div>
@@ -45,10 +45,10 @@
                         <iframe id="video{{ video.id }}" width="100%" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         <div class="icons-edit icons-vignet">
                             <a href="#">
-                                <img src="/icons/icons/pencil.svg" width="22px" height="22px" alt="trash_icon" title="Modifier la video">
+                                <img src="/icons/icons/pencil.svg" width="22px" height="22px" alt="pencil_icon" title="Modifier la video">
                             </a>
                             <a id="{{video.id}}" class="js-video-delete deleteb" href="{{ path('video_remove', {'id' : video.id}) }}" data-action="delete" data-target="#block_trick_videos_{{ loop.index0 }}" >
-                                <img src="/icons/icons/trash.svg" width="22px" height="22px" alt="pencil_icon" title="supprimer la video">
+                                <img src="/icons/icons/trash.svg" width="22px" height="22px" alt="trash_icon" title="supprimer la video">
                             </a>
                         </div>
                     </div>
@@ -151,7 +151,9 @@
             </div>
         </div>
         <div class="col-2">
-            <button type="button" data-action="delete" data-target="#block_{{id}}" class=" btn btn-danger">X</button>
+            <a href="#" data-action="delete" data-target="#block_{{id}}">
+                <img src="/icons/icons/x-circle.svg" width="44px" height="44px" alt="xcircle_icon" title="supprimer" />
+            </a>
         </div>
     </div>
 </div>
@@ -183,7 +185,9 @@
             </div>
         </div>
         <div class="col-2">
-            <button type="button" data-action="delete" data-target="#block_{{id}}" class="btn btn-danger">X</button>
+            <a href="#" data-action="delete" data-target="#block_{{id}}">
+                <img src="/icons/icons/x-circle.svg" width="44px" height="44px" alt="xcircle_icon" title="supprimer" />
+            </a>
         </div>
     </div>
 </div>

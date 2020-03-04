@@ -67,6 +67,10 @@ class TrickController extends AbstractController
 
             $manager->persist($comment);
             $manager->flush();
+
+            return $this->redirectToRoute('trick_show',
+             ['slug' => $slug]
+            );
         }
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
@@ -227,7 +231,7 @@ class TrickController extends AbstractController
     public function removeImage(Image $image, EntityManagerInterface $manager, ImageRepository $imageRepo)
     {
         $image = $imageRepo->findOneById($image);
-
+        unlink('uploads/images/' . $image->getFilename());
         $manager->remove($image);
         $manager->flush();
 

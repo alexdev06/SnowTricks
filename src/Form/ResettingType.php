@@ -13,13 +13,13 @@ class ResettingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-
         ->add('passwordHash', PasswordType::class, [
             'label' => 'Votre nouveau mot de passe',
             'attr' => [
                 'placeholder' => 'Nouveau Mot de passe'
             ]
         ])
+        
         ->add('passwordConfirm', PasswordType::class, [
             'label' => 'Confirmez votre nouveau mot de passe',
             'attr' => [

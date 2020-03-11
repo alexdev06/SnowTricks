@@ -4,78 +4,34 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title>{% block title %}SnowTricks - Le site de référence sur les tricks de snowboard !{% endblock %}</title>
+        <link rel="shortcut icon" type="image/png" href="/images/favicon.png"/>
         <link rel="stylesheet" href="https://bootswatch.com/4/litera/bootstrap.min.css">
         <link rel="stylesheet" href="/css/app.css">
         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
         {% block stylesheets %}{% endblock %}
     </head>
+
     <body>
-{# Navigation bar #}
-        <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light main-nav">
-            <a class="navbar-brand" href="{{ path('homepage') }}">SnowTricks !</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarColor03">
-                <ul class="navbar-nav ml-auto">
-                    {% if app.user %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('trick_create') }}">Ajouter un trick</a>
-                    </li>
-                    <li class="nav-item">
-                        <a  class="nav-link" href="{{ path('account_logout') }}">Déconnexion</a>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('account_register') }}">Inscription</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('account_login') }}">Connexion</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
+        {# Navigation bar #}
+        {% include 'common/header.html.twig' %}    
 
-{# Content #}
-{% block body %}{% endblock %}
+        {# Content #}
+        {% block body %}{% endblock %}
 
-{# Mobile navigation bar #}
-        <nav class="fixed-bottom bg-light bottom-nav">
-           <div class="d-flex justify-content-around">
-                <a href="{{ path('homepage') }}">
-                    <img src="/icons/icons/house.svg" alt="accueil" title="accueil" width="48px" height="48px" display="inline-block">
-                </a>
-                {% if app.user %}
-                <a href="{{ path('trick_create') }}">
-                    <img src="/icons/icons/document-richtext.svg" alt="ajouter un trick" title="ajouter un trick" width="48px" height="48px" display="inline-block">
-                </a>
-                <a href="{{ path('account_logout') }}">
-                    <img src="/icons/icons/unlock.svg" alt="déconnexion" title="déconnexion" width="48px" height="48px" >
-                </a>
-                {% else %}
-                <a href="{{ path('account_register') }}">
-                    <img src="/icons/icons/bookmark.svg" alt="inscription" title="inscription" width="48px" height="48px" display="inline-block">
-                </a>
-                <a href="{{ path('account_login') }}">
-                    <img src="/icons/icons/person.svg" alt="connexion" title="connexion" width="48px" height="48px" >
-                </a>
-                {% endif %}
-            </div>
-        </nav>
+        {# Mobile navigation bar #}
+        {% include 'common/mobileNavbar.html.twig' %}
 
-{# Navigation scroll arrow #}
+        {# Navigation scroll arrow #}
         <a class="arrow-nav" href="#" id="to-top">
             <img src="/icons/icons/chevron-up.svg" alt="chevron-up" width="48px" height="48px">
         </a>
-{# Footer #}
-        <footer class="mt-5 bg-light py-5 text-center">
-            <p>Copyright SnowTricks !</p>
-        </footer>
+        {# Footer #}
+        {% include 'common/footer.html.twig' %}
+
         <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-        <script src="/script/scroll-navigation.js"></script>
+        <script src="/js/scroll-navigation.js"></script>
         {% block javascripts %}
         {% endblock %}
     </body>

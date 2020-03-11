@@ -1,0 +1,69 @@
+{# Form theme #}
+
+{# images input custom theme #}
+{% block _trick_images_widget %} 
+    <p>Ajouter ou supprimer des images</p>
+    {{ form_widget(form) }}
+    <input type="hidden" id="widgets-counter-image" value="0" />
+    <div class="form-group">
+        <button type="button" id="add-image" class="btn btn-primary">Ajouter une image</button>
+    </div>
+{% endblock %}
+
+{% block _trick_images_entry_row %}
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block _trick_images_entry_widget %}
+<div class="form-group" id="block_{{id}}">
+    <div class="row">
+        <div class="col-8">
+            <div class="row">
+                <div class="col">
+                    {{ form_errors(form.imageFile) }}
+                    {{ form_widget(form.imageFile) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-2 align-self-end">
+            <a href="#" data-action="delete" data-target="#block_{{id}}">
+                <img src="/icons/icons/x-circle.svg" width="44px" height="44px" alt="xcircle_icon" title="supprimer" />
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{# videos input custom theme #}
+{% block _trick_videos_widget %} 
+    <p>Ajouter vos liens vers des videos (facultatif)</p>
+
+    {{ form_widget(form) }}
+    <input type="hidden" id="widgets-counter-video" value="0" />
+    <div class="form-group">
+        <button type="button" id="add-video" class="btn btn-primary">Ajouter une video</button>
+    </div>
+{% endblock %}
+
+{% block _trick_videos_entry_row %}
+    {{ form_widget(form) }}
+{% endblock %}
+
+{% block _trick_videos_entry_widget %}
+<div class="form-group" id="block_{{id}}">
+    <div class="row">
+        <div class="col-10">
+            <div class="row">
+                <div class="col">
+                    {{ form_widget(form.url) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-2 align-self-end">
+            <a href="#" data-action="delete" data-target="#block_{{id}}">
+                <img src="/icons/icons/x-circle.svg" width="44px" height="44px" alt="xcircle_icon" title="supprimer" />
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

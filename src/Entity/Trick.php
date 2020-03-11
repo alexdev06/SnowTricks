@@ -6,8 +6,8 @@ use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-Use Symfony\Component\Validator\Constraints as Assert;
-Use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
@@ -16,6 +16,7 @@ Use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * "slug"
  * },
  * message="Le trick est déjà enregistré !")
+ * 
  * @ORM\HasLifecycleCallbacks
  * 
  */
@@ -29,6 +30,8 @@ class Trick
     private $id;
 
     /**
+     * Trick name has an unicity constraint
+     * 
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min = 2, minMessage = "Le nom du trick doit faire au moins 2 caractères !")
      * @Assert\Length(max = 40, maxMessage = "Le nom du trick ne doit pas faire plus de 40 caractères !")
@@ -50,18 +53,24 @@ class Trick
     private $createdAt;
 
     /**
+     * Slug has an unicity constraint
+     * 
      * @ORM\Column(type="string", length=255)
      */
     private $slug;
 
     /**
+     * Images are optionals
+     * 
      * @ORM\OneToMany(targetEntity="App\Entity\Image", mappedBy="trick", orphanRemoval=true)  
      * 
      */
     private $images;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * ImageMain is the reference image for the trick. 
+     * 
+     * @ORM\Column(type="string", length=255)
      */
     private $imageMain;
 
@@ -78,6 +87,8 @@ class Trick
     private $modifiedAt;
 
     /**
+     * Videos are optionals
+     * 
      * @ORM\OneToMany(targetEntity="App\Entity\Video", mappedBy="trick", orphanRemoval=true)
      */
     private $videos;
@@ -89,10 +100,12 @@ class Trick
     private $comments;
 
     /**
+     * Each tricks are linked to an user but no functionnality use this link for yet
+     * 
+     * 
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="tricks")
      */
     private $user;
-
 
 
     public function __construct()
@@ -103,6 +116,8 @@ class Trick
     }
 
     /**
+     * Slug generation with use of the trick name
+     * 
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
@@ -307,4 +322,37 @@ class Trick
 
         return $this;
     }
+
+    /**
+     * Add date to the createdAt attribut when a trick is created
+     * 
+     * @ORM\PrePersist
+     */
+    public function creationDate()
+    {
+        if (empty($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
+    }
+
+    /**
+     * Modify date to the modifiedAt attribut for each trick update
+     * 
+     * @ORM\PreUpdate
+     */
+    public function modificationDate()
+    {
+        $this->modifiedAt = new \DateTime();
+    }
+
+    /**
+    * Delete the imageMain file
+    *
+    * @ORM\PostRemove
+    */
+    public function imageMainFileDelete()
+    {
+        unlink('uploads/images/' . $this->imageMain);
+    }
 }
+

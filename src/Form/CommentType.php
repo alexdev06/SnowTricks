@@ -19,7 +19,6 @@ class CommentType extends AbstractType
                     'placeholder' => "Votre commentaire"
                 ]
             ])
-
         ;
     }
 

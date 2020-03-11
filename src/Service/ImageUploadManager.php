@@ -7,37 +7,34 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
 class ImageUploadManager extends AbstractController
 {
+    /**
+     * Constants which represents uploads directories
+     */
+    const AVATAR_DIRECTORY = 'avatar_directory';
+    const IMAGE_DIRECTORY = 'image_directory';
 
     /**
-     * Rename and save trick images in uploads/images directory
+     * Rename image files and save in the right directory (avatars or images)
      */
-    public function imageFile($uploadedFile)
+    public function imageSave($uploadedFile, $directory, $user = null)
     {
         $originalFilename = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
-        $filename = $safeFilename . '_' . uniqid() . '_' . $uploadedFile->guessExtension();
+        // If user is not null(It's an avatar file), rename uses Firstname and Lastname of the user for the new name
+        if (null !== $user) {
+            $renamedFilename = $user->getFirstName() . '_' . $user->getLastName() . '_' . $originalFilename;
+            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
+        } else {
+            $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+        }
+        
+        $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
+        
         try {
-            $uploadedFile->move($this->getParameter('image_directory'), $filename);
+            // Files are moved and saved in the right directory
+            $uploadedFile->move($this->getParameter($directory), $newFilename);
         } catch (FileException $e) {
             die('Erreur, impossible de sauvegarder l\'image');
         }
-        return $filename;
-    }
-
-    /**
-     * Rename and save user avatar image in uploads/avatars directory
-    */
-    public function avatarFile($avatarFile, $user)
-    {
-        $originalFilename = pathinfo($avatarFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $renamedFilename = $user->getFirstName() . '_' . $user->getLastName() . '_' . $originalFilename;
-        $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $renamedFilename);
-        $newFilename = $safeFilename . '-' . uniqid() . '.' . $avatarFile->guessExtension();
-        try {
-            $avatarFile->move($this->getParameter('avatar_directory'), $newFilename);
-        } catch (FileException $e) {
-            die('Erreur, impossible de sauvegarder l\'avatar');
-        }
-       return $newFilename;
+        return $newFilename;
     }
 }

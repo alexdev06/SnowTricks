@@ -1,0 +1,22 @@
+<nav class="fixed-bottom bg-light bottom-nav">
+    <div class="d-flex justify-content-around">
+        <a href="{{ path('homepage') }}">
+            <img src="/icons/icons/house.svg" alt="accueil" title="accueil" width="48px" height="48px" display="inline-block">
+        </a>
+        {% if app.user %}
+        <a href="{{ path('trick_create') }}">
+            <img src="/icons/icons/document-richtext.svg" alt="ajouter un trick" title="ajouter un trick" width="48px" height="48px" display="inline-block">
+        </a>
+        <a href="{{ path('account_logout') }}">
+            <img src="/icons/icons/unlock.svg" alt="déconnexion" title="déconnexion" width="48px" height="48px" >
+        </a>
+        {% else %}
+        <a href="{{ path('account_register') }}">
+            <img src="/icons/icons/bookmark.svg" alt="inscription" title="inscription" width="48px" height="48px" display="inline-block">
+        </a>
+        <a href="{{ path('account_login') }}">
+            <img src="/icons/icons/person.svg" alt="connexion" title="connexion" width="48px" height="48px" >
+        </a>
+        {% endif %}
+    </div>
+</nav>

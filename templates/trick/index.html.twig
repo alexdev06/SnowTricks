@@ -4,83 +4,81 @@
 
 {% block body %}
 {# Jumbotron #}
-<section>
-    <div class="jumbotron jumbotron-home text-center vertical-center d-flex align-items-center justify-content-center" >
-        <div id="title-block">
-            <h1 class="display-3 ">SnowTricks !</h1>
-            <p class="lead light">
-                <a href="#list" >Le site de référence sur les tricks de snowboard.</a>
-            </p>
-            {% for label, messages in app.flashes %}
-            <div class="flash-message alert alert-{{ label }}">
-                {% for message in messages %}
-                <p class="my-0">{{ message }}</p>
-                {% endfor %}
-            </div>
+<div class="jumbotron jumbotron-home text-center vertical-center d-flex align-items-center justify-content-center" >
+    <div id="title-block">
+        <h1 class="display-3 ">SnowTricks !</h1>
+        <p class="lead light">
+            <a href="#list" >Le site de référence sur les tricks de snowboard.</a>
+        </p>
+        {% for label, messages in app.flashes %}
+        <div class="flash-message alert alert-{{ label }}">
+            {% for message in messages %}
+            <p class="my-0">{{ message }}</p>
             {% endfor %}
         </div>
+        {% endfor %}
     </div>
-</section>
+</div>
 
 {# Tricks list #}
-<section>
-    <div class="container">
-        <div>
-            <h1 id="list">Liste des tricks !</h1>
-            <p class="my-4">Il y a actuellement {{ tricks | length}} tricks dans la base de données!</p>
-        </div>
-        
-        <div class="row" id="tricks-list">
-            {% for trick in tricks | slice(0,12) %}
-            <div class="col-sm-6 col-lg-4 col-xl-3">
-                <div class="card bg-light mb-3">
-                    <a href="{{ path('trick_show', {'slug': trick.slug}) }}">
-                        <img src="/uploads/images/{{ trick.imageMain }}" alt="Image du trick {{ trick.name }}" style="height: 200px; width: 100%; display: block">
-                    </a>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-7">
-                            <a href="{{ path('trick_show', {'slug': trick.slug}) }}">
-                                <h2 class="h6 card-title">{{ trick.name }}</h5>
-                            </a>
-                            </div>
-                            {% if app.user %}
-                            <div class="col-5">
-                                <div class="icons-style icons-edit" style="display: inline-block">
-                                    <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
-                                        <img src="/icons/icons/pencil.svg" width="24px" height="24px" alt="icone de modification" title="Modifier le trick">
-                                    </a>
-                                    <a href="{{ path('trick_delete', {'slug': trick.slug}) }}" class="js-trick-delete">
-                                        <img src="/icons/icons/trash.svg" width="24px" height="24px" alt="icone de suppression" title="Supprimer le trick">
-                                    </a>
-                                </div>
-                            </div>
-                            {% endif %}
+<div class="container">
+    <div>
+        <h1 id="list">Liste des tricks !</h1>
+        <p class="my-4">Il y a actuellement {{ tricks | length}} tricks dans la base de données!</p>
+    </div>
+    
+    <div class="row" id="tricks-list">
+        {% for trick in tricks | slice(0,12) %}
+        <div class="col-sm-6 col-lg-4 col-xl-3">
+            <div class="card bg-light mb-3">
+                <a href="{{ path('trick_show', {'slug': trick.slug}) }}">
+                    <img src="/uploads/images/{{ trick.imageMain }}" alt="Image du trick {{ trick.name }}" style="height: 200px; width: 100%; display: block">
+                </a>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-7">
+                        <a href="{{ path('trick_show', {'slug': trick.slug}) }}">
+                            <h2 class="h6 card-title">{{ trick.name }}</h5>
+                        </a>
                         </div>
+                        {% if app.user %}
+                        <div class="col-5">
+                            <div class="icons-style icons-edit" style="display: inline-block">
+                                <a href="{{ path('trick_edit', {'slug': trick.slug}) }}">
+                                    <img src="/icons/icons/pencil.svg" width="24px" height="24px" alt="icone de modification" title="Modifier le trick">
+                                </a>
+                                <a href="{{ path('trick_delete', {'slug': trick.slug}) }}" class="js-trick-delete">
+                                    <img src="/icons/icons/trash.svg" width="24px" height="24px" alt="icone de suppression" title="Supprimer le trick">
+                                </a>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
-
-        {% if tricks | length > 12 %}
-        <div class="d-flex justify-content-center my-4">
-            <a id="more-tricks" class="btn btn-light" >
-                Afficher plus de tricks !
-            </a>
-        </div>
-        {% endif %} 
+        {% endfor %}
     </div>
 
+    {% if tricks | length > 12 %}
+    <div class="d-flex justify-content-center my-4">
+        <a id="more-tricks" class="btn btn-light" >
+            Afficher plus de tricks !
+        </a>
+    </div>
+    {% endif %} 
+</div>
+
 {# navigation arrow #}
-    <a class="arrow-nav" href="#" id="to-list">
-        <img src="/icons/icons/chevron-down.svg" alt="chevron-down" width="48px" height="48px">
-    </a>
-</section>
+<a class="arrow-nav" href="#" id="to-list">
+    <img src="/icons/icons/chevron-down.svg" alt="chevron-down" width="48px" height="48px">
+</a>
+
 
 {% endblock %}
 
 {% block javascripts %}
+{# Add more tricks ajax script #}
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
     click = 0;
@@ -106,16 +104,13 @@
     }
     document.getElementById("more-tricks").addEventListener("click", moreTricks);
 
-    
-</script>
-
-<script>
-$("a.js-trick-delete").click(function(e) {
-    e.preventDefault();
-    if (confirm("Confirmez vous la suppression du trick ?")) {
-         location.href = $(this).attr("href");
-    }
-});
+    {# Suppression confirmation dialog box #}
+    $("a.js-trick-delete").click(function(e) {
+        e.preventDefault();
+        if (confirm("Confirmez vous la suppression du trick ?")) {
+            location.href = $(this).attr("href");
+        }
+    });
 </script>
 
 {% endblock %}

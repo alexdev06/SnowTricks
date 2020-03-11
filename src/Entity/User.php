@@ -42,23 +42,31 @@ class User implements UserInterface
     private $lastName;
 
     /**
+     * email has an unicity constraint
+     * 
      * @ORM\Column(type="string", length=255)
      * @Assert\Email(message="Veuillez renseigner un email valide !")
      */
     private $email;
 
     /**
+     * Contains the crypted password
+     * 
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min = 6, minMessage = "Votre mot de passe doit faire au moins 6 caractères !")
      */
     private $passwordHash;
 
     /**
+     * Used as verification input
+     * 
      * @Assert\EqualTo(propertyPath="passwordHash", message="Les mots de passe sont différents !")
      */
     public $passwordConfirm;
 
     /**
+     * File name of the avatar image
+     * 
      * @ORM\Column(type="string", length=255, nullable=true)
      * 
      */
@@ -75,22 +83,30 @@ class User implements UserInterface
     private $tricks;
 
     /**
+     * loginname is used to login and has an unicity constraints
+     * 
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min = 2, minMessage = "Votre login doit faire au moins 2 caractères !")
      */
     private $loginName;
 
     /**
+     * Date when token is created. Is used to create an limited delay action
+     * 
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $tokenRequestAt;
 
     /**
+     * Token is created for password recuperation and account creation verification
+     * 
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $token;
 
     /**
+     * Define the account activation
+     * 
      * @ORM\Column(type="boolean")
      */
     private $isActive;
@@ -253,6 +269,10 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * Return the firstname and the lastname of the user
+     * 
+     */
     public function getFullName()
     {
         return $this->firstName . ' ' . $this->lastName;

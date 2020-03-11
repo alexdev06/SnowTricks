@@ -23,6 +23,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TrickController extends AbstractController
 {
     /**
+     * Homepage with tricks list
+     * 
      * @Route("/", name="homepage")
      */
     public function index(TrickRepository $repo)
@@ -37,6 +39,8 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Homepage more tricks display by step of 12
+     * 
      * @Route("/{start}", name="more_tricks", requirements={"start": "\d+"})
      */
     public function moreTricks(TrickRepository $repo, $start = 12)
@@ -51,12 +55,14 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Trick page
+     * 
      * @Route("/trick/{slug}", name="trick_show")
+     * 
      */
-    public function show(TrickRepository $repo, $slug, Request $request, EntityManagerInterface $manager)
+    public function show(Trick $trick, $slug, Request $request, EntityManagerInterface $manager)
     {
-        $trick = $repo->findOneBySlug($slug);
-       
+        // Comment form for registered user
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
@@ -79,6 +85,8 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Display more comments by step of 10 in Trick page
+     * 
      * @Route("/trick/{slug}/{start}", name="more_comments", requirements={"start": "\d+"})
      */
     public function moreComments(TrickRepository $repo, $slug, $start = 10)
@@ -91,6 +99,8 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Trick creation page
+     * 
      * @Route("/create", name="trick_create")
      * @IsGranted("ROLE_USER")
      */
@@ -104,11 +114,11 @@ class TrickController extends AbstractController
             /** @var UploadedFile $imageMainFile */
             $uploadedFile = $form->get('imageMainFile')->getData();
             if ($uploadedFile) {
-                // ImageUploadManager service which renames and saves trick imageMain
-                $filename = $imageUploadManager->imageFile($uploadedFile);
+                // ImageUploadManager service which renames and saves trick imageMain in the good path
+                $filename = $imageUploadManager->imageSave($uploadedFile, ImageUploadManager::IMAGE_DIRECTORY);
                 $trick->setImageMain($filename);
             }
-
+            // Video links treatment
             foreach ($trick->getVideos() as $video) {
                 if ($video) {
                     $video->setTrick($trick);
@@ -116,11 +126,11 @@ class TrickController extends AbstractController
                     $manager->persist($video);
                 }
             }
-
+            // Images treatement
             foreach ($trick->getImages() as $image) {
                 if ($image) {
                     // ImageUploadManager service which renames and saves trick images
-                    $filename = $imageUploadManager->imageFile($image->getImageFile());
+                    $filename = $imageUploadManager->imageSave($image->getImageFile(), ImageUploadManager::IMAGE_DIRECTORY);
                     $image->setFilename($filename);
                     $image->setTrick($trick);
 
@@ -128,7 +138,6 @@ class TrickController extends AbstractController
                 }
             }
 
-            $trick->setCreatedAt(new \DateTime());
             $trick->setUser($this->getUser());
     
             $manager->persist($trick);
@@ -146,50 +155,54 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Trick edition page
+     * 
      * @Route("/trick/{slug}/edit", name="trick_edit")
      * @IsGranted("ROLE_USER")
      */
     public function edit(Trick $trick, Request $request, EntityManagerInterface $manager, ImageUploadManager $imageUploadManager)
     {
-        // on récupère un nom de fichier qui est l'entrée en db.
+        // Save the imageMain file name in $imageMain variable and add the complet file path of the imageMain file.
+        // Its necessary to make form working.
         $imageMain = $trick->getImageMain();
         if ($imageMain !== null) {
             $trick->setImageMain(new File($this->getParameter('image_directory') . '/' . $imageMain));
         }
-       
+     
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile*/
             $uploadedFile = $form->get('imageMainFile')->getData();
+            // Check if a new imageMain has been added in the form
             if ($uploadedFile) {
                 // ImageUploadManager service which renames and saves trick imageMain
-                $filename = $imageUploadManager->imageFile($uploadedFile);
+                $filename = $imageUploadManager->imageSave($uploadedFile, ImageUploadManager::IMAGE_DIRECTORY);
                 $trick->setImageMain($filename);
             } else {
+                // If imageMain has not been changed, imageMain value previously saved in $imageMain is reintegrated in the trick
                 $trick->setImageMain($imageMain);
             }
-
+            // Video links treatment
             foreach ($trick->getVideos() as $video) {
                 if ($video) {
                     $video->setTrick($trick);
                     $manager->persist($video);
                 }
             }
-
+            // Images treatement
             $uploadedCollection = $form->get('images')->getData();
             foreach ($uploadedCollection as $image) {
                 if ($image->getImageFile()) {
                    // ImageUploadManager service which renames and saves trick images
-                    $filename = $imageUploadManager->imageFile($image->getImageFile());
+                    $filename = $imageUploadManager->imageSave($image->getImageFile(), ImageUploadManager::IMAGE_DIRECTORY);
                     $image->setFilename($filename);
                     $image->setTrick($trick);
                     $manager->persist($image);
                 }
             }
 
-            $trick->setModifiedAt(new \DateTime());
             $trick->setUser($this->getUser());
 
             $manager->persist($trick);
@@ -209,6 +222,8 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Trick remove action
+     * 
      * @Route("/trick/{slug}/delete", name="trick_delete")
      * @IsGranted("ROLE_USER")
      */
@@ -226,12 +241,14 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Delete trick images in database and remove image files
+     * 
      * @Route("/image{id}", name="image_remove")
+     * @IsGranted("ROLE_USER")
      */
     public function removeImage(Image $image, EntityManagerInterface $manager, ImageRepository $imageRepo)
     {
         $image = $imageRepo->findOneById($image);
-        unlink('uploads/images/' . $image->getFilename());
         $manager->remove($image);
         $manager->flush();
 
@@ -242,12 +259,14 @@ class TrickController extends AbstractController
     }
 
     /**
+     * Trick video delete
+     * 
      * @Route("/video{id}", name="video_remove")
+     * @IsGranted("ROLE_USER")
      */
     public function removeVideo(Video $video, EntityManagerInterface $manager, VideoRepository $videoRepo)
     {
         $video = $videoRepo->findOneById($video);
-
         $manager->remove($video);
         $manager->flush();
 

@@ -3,10 +3,8 @@
 namespace App\Security;
 
 use App\Entity\User as AppUser;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
-use App\Exception\AccountDeletedException;
 use Symfony\Component\Security\Core\Exception\AccountExpiredException;
 
 class UserChecker implements UserCheckerInterface

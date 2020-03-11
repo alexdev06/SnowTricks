@@ -4,11 +4,11 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-Use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
- * 
+ * @ORM\HasLifecycleCallbacks
  */
 class Image
 {
@@ -20,6 +20,8 @@ class Image
     private $id;
 
     /**
+     * The name of image file after been renamed
+     * 
      * @ORM\Column(type="string", length=255)
      */
     private $filename;
@@ -31,6 +33,10 @@ class Image
     private $trick;
 
 
+    /**
+     *  The imageFile contains an UploadFile object which is used for treatment and not persisted in database
+     * 
+     */
     private $imageFile;
 
 
@@ -71,5 +77,15 @@ class Image
         $this->trick = $trick;
 
         return $this;
+    }
+
+    /**
+     * Delete image files when an image is removed in database(image suppression or indirectly by trick suppression)
+     * 
+     * @ORM\PostRemove
+     */
+    public function deleteImageFile()
+    {
+        unlink('uploads/images/' . $this->filename);
     }
 }

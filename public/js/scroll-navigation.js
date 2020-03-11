@@ -1,5 +1,5 @@
 jQuery(document).ready(function () {
-
+    
     $(window).scroll(function () {
         var height = $(window).scrollTop();
         if (height > 100) {
@@ -22,6 +22,4 @@ jQuery(document).ready(function () {
         $("html, body").stop().animate({ scrollTop: $("#list").offset().top }, "slow");
         return false;
     });
-
-
 });

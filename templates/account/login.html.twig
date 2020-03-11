@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Connexion au site{% endblock %}
+{% block title %}SnowTricks - Connexion au site{% endblock %}
 
 {% block body %}
 <div id="background-show">
@@ -9,6 +9,7 @@
             <div class="col-md-9 col-lg-6 ">
                 <div class="bg-light content-box p-4">
                     <h1>Connexion au site</h1>
+                    
                     {% if hasError %}
                         <div class="alert alert-danger">Le compte n'a pas été validé ou le nom d'utilisateur ou le mot de passe est incorrect !</div>
                     {% endif %}
@@ -33,6 +34,7 @@
                             <button type="submit" class="btn btn-success" >Connexion !</button>
                         </div>
                     </form>
+                    
                     <p class="text-center"><a href="{{ path('account_reset_password_request') }}">Mot de passe oublié ?</a></p>
                 </div>
             </div>

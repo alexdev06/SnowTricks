@@ -12,9 +12,9 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Validator\Constraints\Image as ImageConstraint;
 
 class TrickType extends AbstractType
 {
@@ -45,9 +45,15 @@ class TrickType extends AbstractType
             ->add('imageMainFile', FileType::class, [
                 'mapped' => false,
                 'label' => 'Image de fond',
-                'required' => false,
                 'attr' => [
                     'placeholder' => 'Ajouter une image de fond'
+                ],
+                'constraints' => [
+                    new ImageConstraint([
+                        'mimeTypesMessage' => 'Le fichier n\'est pas une image valide!',
+                        'maxSize' => '2048k',
+                        'maxSizeMessage' => 'L\'image doit faire moins de 2Mo !'
+                    ])
                 ]
             ])
 

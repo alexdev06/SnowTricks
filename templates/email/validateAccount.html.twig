@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+    </head>
+    <body>
+        <p>Bonjour {{ user.loginName }} !<br>
+        Bienvenue sur le site SnowTricks! <br />
+        Pour valider votre inscription sur le site SnowTricks, cliquez sur le lien suivant : </p>
+        <p><a href="https://127.0.0.1:8000/register/{{ user.id }}/{{ user.token }}">Validation du compte</a> <br /></p>
+        <p>Pour tout problème avec votre compte, veuillez contacter un administrateur à l\'adresse suivante: <a href="mailto:contact@alexandremanteaux.fr">contact@alexandremanteaux.fr</a></p>
+    </body>
+</html>

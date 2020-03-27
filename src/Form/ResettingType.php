@@ -8,6 +8,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
+/**
+ * A form to enter the new password. Contains an equality password check field.
+ */
 class ResettingType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -19,7 +22,6 @@ class ResettingType extends AbstractType
                 'placeholder' => 'Nouveau Mot de passe'
             ]
         ])
-        
         ->add('passwordConfirm', PasswordType::class, [
             'label' => 'Confirmez votre nouveau mot de passe',
             'attr' => [

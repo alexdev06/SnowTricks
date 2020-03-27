@@ -27,21 +27,17 @@ class TrickType extends AbstractType
                     'placeholder' => 'Nom du trick'
                 ]
             ])
-            
             ->add('description', TextareaType::class, [
                 'label' => 'Description du trick',
                 'attr' => [
                     'placeholder' => 'Description du trick'
                 ]
             ])
-
             ->add('category', EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
                 'label' => 'Catégorie du trick',
-
             ])
-
             ->add('imageMainFile', FileType::class, [
                 'mapped' => false,
                 'label' => 'Image de fond',
@@ -56,14 +52,12 @@ class TrickType extends AbstractType
                     ])
                 ]
             ])
-
             ->add('images', CollectionType::class, [
                 'entry_type' => ImageType::class,
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true
             ])
-
             ->add('videos', CollectionType::class, [
                 'entry_type' => VideoType::class,
                 'required' => false,

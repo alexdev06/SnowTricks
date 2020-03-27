@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 
 /**
+ * Image class reprensents optionnal trick image 
+ * 
  * @ORM\Entity(repositoryClass="App\Repository\ImageRepository")
  * @ORM\HasLifecycleCallbacks
  */

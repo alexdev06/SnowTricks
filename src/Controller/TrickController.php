@@ -39,7 +39,7 @@ class TrickController extends AbstractController
     }
 
     /**
-     * Homepage more tricks display by step of 12
+     * Homepage more tricks by step of 12
      * 
      * @Route("/{start}", name="more_tricks", requirements={"start": "\d+"})
      */

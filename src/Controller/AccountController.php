@@ -172,7 +172,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * Reset accout password action
+     * Reset account password action
      * 
      * @Route("reset/{id}/{token}", name="account_reset_password")
      */

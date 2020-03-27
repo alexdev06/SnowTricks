@@ -6,6 +6,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Video class represents optionnal video link for a trick
+ * 
  * @ORM\Entity(repositoryClass="App\Repository\VideoRepository")
  */
 class Video

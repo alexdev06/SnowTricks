@@ -10,12 +10,11 @@ Use Symfony\Component\Validator\Constraints as Assert;
 Use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
+ * User class represents registered user account
+ * 
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
- * @UniqueEntity(
- * fields={"email",
- * "loginName"
- * },
- * message="L'email ou le nom d'utilisateur est déjà utilisé !")
+ * @UniqueEntity(fields="loginName", message="Le nom d'utilisateur est déjà utilisé !")
+ * @UniqueEntity(fields="email", message="L'email est déjà utilisé !")
  */
 class User implements UserInterface
 {

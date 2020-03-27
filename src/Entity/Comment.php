@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 Use Symfony\Component\Validator\Constraints as Assert; 
 
 /**
+ * Comment class represents trick comment
+ * 
  * @ORM\Entity(repositoryClass="App\Repository\CommentRepository")
  * @ORM\HasLifecycleCallbacks()
  */

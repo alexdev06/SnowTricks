@@ -10,6 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
+ * Trick class represents a trick
+ * 
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
  * @UniqueEntity(
  * fields={"name",

@@ -4,12 +4,14 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Validator\Constraints\Image as ImageConstraint;
 
 
 class RegistrationType extends AbstractType
@@ -59,6 +61,17 @@ class RegistrationType extends AbstractType
             ->add('avatarFile', FileType::class, [
                 'required' => false,
                 'label' => 'Votre photo de profile',
+                'mapped' => false,
+                'constraints' => [
+                    new ImageConstraint([
+                        'mimeTypesMessage' => 'Le fichier n\'est pas une image valide!',
+                        'maxSize' => '2048k',
+                        'maxSizeMessage' => 'L\'image doit faire moins de 2Mo !',
+                    ])
+                ]
+            ])
+            ->add('consentCheck', CheckboxType::class, [
+                'label' => 'En soumettant ce formulaire, j\'accepte que mes informations soient utilisées dans le cadre de la gestion des utilisateurs du site SnowTricks.',
                 'mapped' => false
             ])
         ;

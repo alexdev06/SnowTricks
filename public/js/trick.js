@@ -27,13 +27,20 @@ function handleDeleteButtons() {
     })
 }
 
-// Count the real number of field
-function updateCounter() {
+// Count the real number of image fields
+function updateImageCounter() {
     const count = +$('#trick_images div.form-group').length;
-    $('#widgets-counter').val(count);
+    $('#widgets-counter-image').val(count);
 }
 
-updateCounter();
+// Count the real number of video fields
+function updateVideoCounter() {
+    const count = +$('#trick_videos div.form-group').length;
+    $('#widgets-counter-video').val(count);
+}
+
+updateImageCounter();
+updateVideoCounter();
 handleDeleteButtons();
 
 // {# Bootstrap 4 form theme bug correction on file input # }

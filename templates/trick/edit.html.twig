@@ -35,13 +35,13 @@
                 {% for img in trick.images %}
                     {# Check if img is already in database #}
                     {% if img.id is not empty %}
-                    <div class="col-md-3 mb-2" id="{{ img.id }}img">
+                    <div class="col-md-3 mb-2 image-loop-{{ loop.index0 }}" id="{{ img.id }}img">
                         <img class="image-thumbnail" src="/uploads/images/{{ img.filename }}" alt="Une image d'illustration pour le trick {{ trick.name }}" />
                         <div class="icons-edit icons-vignet">
-                            <a href="#">
+                            <a href="#medias-form" data-action="modify-image" data-target="#block_trick_images_{{ loop.index0 }}">
                                 <img src="/icons/icons/pencil.svg" width="22px" height="22px" alt="pencil_icon" title="Modifier l'image">
                             </a>
-                            <a id="{{img.id}}" class="js-img-delete deleteb" href="{{ path('image_remove', {'id' : img.id}) }}" data-action="delete" data-target="#block_trick_images_{{ loop.index0 }}"  >
+                            <a id="{{ img.id }}" class="js-img-delete deleteb" href="{{ path('image_remove', {'id' : img.id}) }}" data-target="#block_trick_images_{{ loop.index0 }}"  >
                                 <img src="/icons/icons/trash.svg" width="22px" height="22px" alt="trash_icon" title="supprimer l'image">
                             </a>
                         </div>
@@ -52,10 +52,10 @@
                     <div class="col-md-3 video-import mb-2" id="{{ video.id }}video">
                         <iframe id="video{{ video.id }}" width="100%" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                         <div class="icons-edit icons-vignet">
-                            <a href="#">
+                            <a href="#" data-action="modify-video" data-target="#block_trick_videos_{{ loop.index0 }}">
                                 <img src="/icons/icons/pencil.svg" width="22px" height="22px" alt="pencil_icon" title="Modifier la video">
                             </a>
-                            <a id="{{video.id}}" class="js-video-delete deleteb" href="{{ path('video_remove', {'id' : video.id}) }}" data-action="delete" data-target="#block_trick_videos_{{ loop.index0 }}" >
+                            <a id="{{video.id}}" class="js-video-delete deleteb" href="{{ path('video_remove', {'id' : video.id}) }}" data-target="#block_trick_videos_{{ loop.index0 }}" >
                                 <img src="/icons/icons/trash.svg" width="22px" height="22px" alt="trash_icon" title="supprimer la video">
                             </a>
                         </div>
@@ -75,7 +75,7 @@
                     </script>
                 {% endfor %}
             </div>
-            <div class="row text-center mt-4" style="font-size: 0.8em">
+            <div class="row text-center mt-4" style="font-size: 0.9em; font-weight: bold">
                 <div class="col">Créé le : {{ trick.createdAt | date('d/m/Y à H:i') }}</div>
                 <div class="col">Catégorie : {{ trick.category.name }}</div>
                 {% if trick.modifiedAt %}
@@ -106,8 +106,13 @@
        {# Text modification inputs #}
         <div id="text-form" class="mx-4">
             <h3 class="mt-5" >Modifier les textes</h3>
-            <div class="row mt-4 py-3">
-                <div class="col-md-8 col-sm-12 bg-light">
+            <div class="row">
+                <div class="mt-4 py-2 col-md-8 col-sm-12 bg-light">
+                    <div class="row">
+                        <div class="col-12">
+                             {{ form_row(form.name) }}
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-12">
                             {{ form_row(form.description) }}
@@ -117,9 +122,6 @@
                         <div class="col-md-4 col-sm-12">
                             {{ form_row(form.category) }}
                         </div>
-                    </div>
-                    <div style="display: none">
-                        {{ form_row(form.name) }}
                     </div>
                 </div>
             </div>
@@ -148,6 +150,20 @@
 <script src="/js/trick.js"></script>
 
 <script>
+    {# Modify link image on thumbnail #}
+    $('a[data-action="modify-image"]').click(function (event) {
+        event.preventDefault();
+        const target = this.dataset.target;
+        $(target + ' input').click();
+    })
+
+    {# Modify link video on thumbnail #}
+    $('a[data-action="modify-video"]').click(function (event) {
+        event.preventDefault();
+        const target = this.dataset.target;
+        $(target + ' input').focus();
+    })
+
     {# shortcut to edit imageMain  #}
     $('#but-img').click(function() {
         $('#trick_imageMainFile').click();
@@ -160,9 +176,11 @@
             location.href = $(this).attr("href");
         }
     });
+
     {# Toggle medias block in mobile version #}
     $("#switch-edit-medias").click(function() {
         $("#edit-medias").toggle();
     });
+
 </script>
 {% endblock %}

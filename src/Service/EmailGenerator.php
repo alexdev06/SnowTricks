@@ -21,11 +21,7 @@ class EmailGenerator
     public function createEmail(MailerInterface $mailer,$user, $template)
     {
         // Subject deducting of the template
-        if ($template == self::VALIDATION_ACCOUNT) {
-            $subject = 'Activation de votre compte sur SnowTricks';
-        } else {
-            $subject = 'Modification du mot de passe sur Snowtricks';
-        }
+        $subject = ($template == self::VALIDATION_ACCOUNT) ? 'Activation de votre compte sur SnonwTricks' : 'Modification du mot de passe sur SnowTricks';
 
         $email = new TemplatedEmail();
         $email->from('no-reply@snowtricks.com')

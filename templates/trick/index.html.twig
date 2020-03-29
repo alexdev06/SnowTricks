@@ -62,7 +62,7 @@
 
     {% if tricks | length > 12 %}
     <div class="d-flex justify-content-center my-4">
-        <a id="more-tricks" class="btn btn-light" >
+        <a id="more-tricks" class="btn btn-primary text-white" >
             Afficher plus de tricks !
         </a>
     </div>
@@ -90,6 +90,9 @@
         axios.get(url).then(function(response) {
             $("#tricks-list").append(response.data);
             $("#arrow-up").show();
+            if ( response.data.length <= 1 ) {
+                $("#more-tricks").attr("class", "btn btn-danger text-white").text('Il n\'y a plus de tricks à afficher !');
+            }
         }).catch(function (error) {
             if (response.status === 403) {
                 window.alert("Vous n'êtes pas autorisé à effectuer cette action !");

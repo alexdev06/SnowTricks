@@ -16,7 +16,10 @@ class ImageType extends AbstractType
     {
         $builder
             ->add('imageFile', FileType::class, [   
-                'label' => 'Images illustration',   
+                'label' => 'Images illustration',
+                'attr' => [
+                    'placeholder' => 'Selectionnez une image'
+                ],   
                 'constraints' => [
                     new ImageConstraint([
                         'mimeTypesMessage' => 'Le fichier n\'est pas une image valide!',

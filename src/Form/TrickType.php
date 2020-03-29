@@ -42,7 +42,7 @@ class TrickType extends AbstractType
                 'mapped' => false,
                 'label' => 'Image de fond',
                 'attr' => [
-                    'placeholder' => 'Ajouter une image de fond'
+                    'placeholder' => 'Selectionnez une image de fond'
                 ],
                 'constraints' => [
                     new ImageConstraint([

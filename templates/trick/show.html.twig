@@ -114,7 +114,7 @@
 
             <h3 class="my-4"> Description</h3>
             <p>{{ trick.description }}</p>
-            <div class="row text-center mt-4" style="font-size: 0.8em">
+            <div class="row text-center mt-4" style="font-size: 0.9em; font-weight: bold">
                 <div class="col">Créé le : {{ trick.createdAt | date('d/m/Y à H:i') }}</div>
                 <div class="col">Catégorie : {{ trick.category.name }}</div>
                 {% if trick.modifiedAt %}
@@ -159,7 +159,7 @@
             </div>
             {% if trick.comments | length > 10 %}
             <div class="d-flex justify-content-center my-2">
-                <button class="btn btn-light" id="more-comments" type="button">
+                <button class="btn btn-primary" id="more-comments" type="button">
                     Afficher plus de commentaires!
                 </button>
             </div>
@@ -183,6 +183,9 @@
         const url = "{{ path('more_comments', {'slug': trick.slug} )}}/" + start;
         axios.get(url).then(function (response) {
             $("#comments").append(response.data);
+            if ( response.data.length <= 1 ) {
+                $("#more-comments").attr("class", "btn btn-danger text-white").text('Fin des commentaires');
+            }
         }).catch(function (error) {
             if (response.status === 403) {
                 window.alert("Vous n'êtes pas autorisé à effectuer cette action !");

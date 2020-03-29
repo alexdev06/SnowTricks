@@ -7,6 +7,8 @@ function onClickBtnDeleteImage(event)
         axios.get(url).then(function(response) {
             document.getElementById("list").removeChild(document.getElementById(id));
         })
+        const target = this.dataset.target;
+        $(target).remove();
     }
 }
 
@@ -22,6 +24,8 @@ function onClickBtnDeleteVideo(event) {
         axios.get(url).then(function (response) {
             document.getElementById("list").removeChild(document.getElementById(id));
         })
+        const target = this.dataset.target;
+        $(target).remove();
     }
 }
 

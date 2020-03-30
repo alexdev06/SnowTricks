@@ -11,7 +11,7 @@
 - PHP 7.3.12
 - MySQL 8.0.18
 - Apache 2.4.41
-- PHPUnit 5.7.27
+- PHPUnit 7.5.20
 - Faker 1.9
 - Slugify 4.0
 - Faker 1.9

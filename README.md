@@ -4,7 +4,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/68a35d8ffdc0495e87637b5cd6abf9a7)](https://app.codacy.com/manual/alexdev06/SnowTricks?utm_source=github.com&utm_medium=referral&utm_content=alexdev06/SnowTricks&utm_campaign=Badge_Grade_Dashboard)
 
 ## Bibliothèques utilisées:
-- Symfony 5.03
+- Symfony 5.0.3
 - Jquery 3.4.1
 - Bootstrap 4.4.1
 - Thème Boostrap "Bootswatch Litera"
@@ -12,7 +12,7 @@
 - MySQL 8.0.18
 - Apache 2.4.41
 - PHPUnit 7.5.20
-- Faker 1.9
+- Faker 1.9.1
 - Slugify 4.0
 - Faker 1.9
 - Apache pack 1.0

@@ -9,6 +9,13 @@
 <div id="background-show">
     <div class="container content-box bg-light p-4 mt-4">
         <h1 class="text-center mb-3 my-4">Ajouter un trick</h1>
+        {% for label, messages in app.flashes %}
+        <div class="col-lg-6 col-xs-12 mx-auto flash-message alert alert-{{ label }}">
+            {% for message in messages %}
+            <p class="my-0 text-center">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endfor %}
         {{ form_start(form) }}
         {{ form_widget(form) }}
         <div class="text-center">

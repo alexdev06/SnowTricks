@@ -149,6 +149,12 @@ class TrickController extends AbstractController
             );
             return $this->redirectToRoute('homepage');
         }
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash(
+                'danger',
+                'La création du trick a échoué !'
+            );
+        }
         return $this->render('trick/create.html.twig', [
             'form' => $form->createView()
         ]);
@@ -213,6 +219,12 @@ class TrickController extends AbstractController
                 'Le trick ' . $trick->getName() . ' a été modifié avec succès !'
             );
             return $this->redirectToRoute('homepage');
+        }
+        if ($form->isSubmitted() && !$form->isValid()) {
+            $this->addFlash(
+                'danger',
+                'La modification du trick a échoué !'
+            );
         }
         return $this->render('trick/edit.html.twig', [
             'form' => $form->createView(),

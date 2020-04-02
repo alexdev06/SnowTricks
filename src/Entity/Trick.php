@@ -13,11 +13,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * Trick class represents a trick
  * 
  * @ORM\Entity(repositoryClass="App\Repository\TrickRepository")
- * @UniqueEntity(
- * fields={"name",
- * "slug"
- * },
- * message="Le trick est déjà enregistré !")
+ * @UniqueEntity(fields="name", message="Le nom du trick est déjà utilisé !")
+ * @UniqueEntity(fields="slug", message="Le slug existe déjà")
  * 
  * @ORM\HasLifecycleCallbacks
  * 

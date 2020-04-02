@@ -13,7 +13,7 @@
         {% for label, messages in app.flashes %}
         <div class="flash-message alert alert-{{ label }}">
             {% for message in messages %}
-            <p class="my-0">{{ message }}</p>
+            <p class="my-0 text-center">{{ message }}</p>
             {% endfor %}
         </div>
         {% endfor %}

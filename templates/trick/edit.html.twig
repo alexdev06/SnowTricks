@@ -8,6 +8,15 @@
 {% block body %}
 
 <div id="background-show">
+    {% for label, messages in app.flashes %}
+    <div class="container">
+        <div class="col-lg-6 col-xs-12 mx-auto flash-message alert alert-{{ label }}" >
+            {% for message in messages %}
+            <p class="my-0 text-center">{{ message }}</p>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
 {# block trick content #}
     <div class="container content-box">
         {# Main image #}
@@ -24,7 +33,6 @@
                 </div>
             </div>
         </div>
-
         <h1 class="my-5 text-center">Modification du trick : {{ trick.name }}</h1>
         <div class="d-flex justify-content-center my-2">
             <button class="btn btn-primary" type="button" id="switch-edit-medias">Modifier les médias</button>

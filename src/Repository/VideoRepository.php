@@ -3,8 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Video;
+use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
  * @method Video|null find($id, $lockMode = null, $lockVersion = null)

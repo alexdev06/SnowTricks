@@ -66,8 +66,8 @@ class AccountController extends AbstractController
                 // Password is crypted an save in database
                 $passwordHash = $encoder->encodePassword($user, $user->getPasswordHash());
                 $user->setPasswordHash($passwordHash);
-
                 $avatarFile = $form->get('avatarFile')->getData();
+
                 if ($avatarFile) {
                     // ImageUploadManager service which rename and save avatar image
                     $newFilename = $imageUploadManager->imageSave($avatarFile, ImageUploadManager::AVATAR_DIRECTORY, $user);
@@ -78,17 +78,15 @@ class AccountController extends AbstractController
                 // By default, account is not active
                 $user->setIsActive(false);
                 $user->setTokenRequestAt(new \Datetime());
-
                 $manager->persist($user);
                 $manager->flush();
-
                 // Use the service EmailGenerator to send an activation email with a time limited link to activate account. 
                 $emailGenerator->createEmail($mailer, $user, EmailGenerator::VALIDATION_ACCOUNT);
-
                 $this->addFlash(
                     'success',
                     'Votre demande d\'inscription a bien été enregistrée. Consultez votre boite email pour la valider!'
                 );
+
                 return $this->redirectToRoute('account_login');
             }
         }
@@ -113,14 +111,13 @@ class AccountController extends AbstractController
         $user->setToken(null);
         $user->setTokenRequestAt(null);
         $user->setIsActive(true);
-
         $manager->persist($user);
         $manager->flush();
-
         $this->addFlash(
             'success',
             'Votre compte a été activé avec succès !'
         );
+
         return $this->redirectToRoute('account_login');
     }
 
@@ -139,7 +136,6 @@ class AccountController extends AbstractController
                 ]
             ])
             ->getForm();
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -150,21 +146,20 @@ class AccountController extends AbstractController
                     'danger',
                     'Cet utilisateur n\'existe pas !'
                 );
+
                 return $this->redirectToRoute('homepage');
             }
 
             $user->setToken($tokenGenerator->generateToken());
             $user->setTokenRequestAt(new \Datetime());
-
             $manager->flush();
-
             // Send an email with a time limited link to change password form
             $emailGenerator->createEmail($mailer, $user, EmailGenerator::RESET_PASSWORD);
-
             $this->addFlash(
                 'success',
                 'La demande de réinitialisation a été envoyée, surveillez votre boite email !'
             );
+
             return $this->redirectToRoute('homepage');
         }
 
@@ -194,16 +189,16 @@ class AccountController extends AbstractController
             // Reset token fields
             $user->setToken(null);
             $user->setTokenRequestAt(null);
-
             $manager->persist($user);
             $manager->flush();
-
             $this->addFlash(
                 'success',
                 'Le nouveau mot de passe a été enregistré avec succès !'
             );
+
             return $this->redirectToRoute('account_login');
         }
+
         return $this->render('account/reset.html.twig', [
             'form' => $form->createView()
         ]);

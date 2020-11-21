@@ -130,11 +130,9 @@ class AppFixtures extends Fixture
             $category = new Category();
             $category->setName($name)
                 ->setDescription($description);
-
             $manager->persist($category);
             $categoriesList[] = $category;
         }
-
 
         $users = [];
 
@@ -146,7 +144,6 @@ class AppFixtures extends Fixture
             $email = $faker->email;
             $passwordHash = $this->encoder->encodePassword($user, 'password');
             $avatar = 'image(' . $k . ').jpeg';
-
             $user->setFirstName($firstName)
                 ->setLastName($lastName)
                 ->setEmail($email)
@@ -154,7 +151,6 @@ class AppFixtures extends Fixture
                 ->setPasswordHash($passwordHash)
                 ->setIsActive(true)
                 ->setAvatar($avatar);
-
             $manager->persist($user);
             $users[] = $user;
         }
@@ -165,7 +161,6 @@ class AppFixtures extends Fixture
             $description = $tricksDescriptions[$i];
             $imageMain = $tricksImagesMain[$i];
             // $categoryNumber = mt_rand(0, 7);
-
             $trick->setName($name)
                 ->setDescription($description)
                 ->setImageMain($imageMain)
@@ -177,7 +172,6 @@ class AppFixtures extends Fixture
                 $image = new Image();
                 $image->setFilename('tricksimage(' . rand(1, 33) . ').jpg')
                     ->setTrick($trick);
-
                 $manager->persist($image);
             }
 
@@ -186,16 +180,13 @@ class AppFixtures extends Fixture
                 $comment->setContent($faker->paragraph())
                     ->setUser($faker->randomElement($users))
                     ->setTrick($trick);
-
                 $manager->persist($comment);
             }
-
 
             for ($m = 1; $m <= rand(1, 2); $m++) {
                 $video = new Video();
                 $video->setUrl($videosList[rand(0, 3)])
                     ->setTrick($trick);
-
                 $manager->persist($video);
             }
 

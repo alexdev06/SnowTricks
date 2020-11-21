@@ -26,15 +26,16 @@ class ImageUploadManager extends AbstractController
         } else {
             $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
         }
-        
+
         $newFilename = $safeFilename . '-' . uniqid() . '.' . $uploadedFile->guessExtension();
-        
+
         try {
             // Files are moved and saved in the right directory
             $uploadedFile->move($this->getParameter($directory), $newFilename);
         } catch (FileException $e) {
             die('Erreur, impossible de sauvegarder l\'image');
         }
+
         return $newFilename;
     }
 }

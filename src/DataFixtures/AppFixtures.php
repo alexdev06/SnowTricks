@@ -10,7 +10,7 @@ use App\Entity\Video;
 use App\Entity\Comment;
 use App\Entity\Category;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class AppFixtures extends Fixture
@@ -38,8 +38,7 @@ class AppFixtures extends Fixture
                         japan ou japan air : saisie de l'avant de la planche, avec la main avant, du côté de la carre frontside.
                         seat belt: saisie du carre frontside à l'arrière avec la main avant ;
                         truck driver: saisie du carre avant et carre arrière avec chaque main (comme tenir un volant de voiture)
-                        Un grab est d'autant plus réussi que la saisie est longue. De plus, le saut est d'autant plus esthétique que la saisie du snowboard est franche, ce qui permet au rideur d'accentuer la torsion de son corps grâce à la tension de sa main sur la planche. On dit alors que le grab est tweaké (le verbe anglais to tweak signifie « pincer » mais a également le sens de « peaufiner »)."
-            , 
+                        Un grab est d'autant plus réussi que la saisie est longue. De plus, le saut est d'autant plus esthétique que la saisie du snowboard est franche, ce qui permet au rideur d'accentuer la torsion de son corps grâce à la tension de sa main sur la planche. On dit alors que le grab est tweaké (le verbe anglais to tweak signifie « pincer » mais a également le sens de « peaufiner »).",
             'Rotations' => "On désigne par le mot « rotation » uniquement des rotations horizontales ; les rotations verticales sont des flips. Le principe est d'effectuer une  rotation horizontale pendant le saut, puis d'attérir en position switch ou normal. La nomenclature se base sur le nombre de degrés de rotation effectués :
 
                         un 180 désigne un demi-tour, soit 180 degrés d'angle ;
@@ -60,28 +59,23 @@ class AppFixtures extends Fixture
                         450 pour un tour un quart ;
                         630 pour un tour trois quarts ;
                         810 pour deux tours un quart ;
-                        etc."
-            , 
+                        etc.",
             'Flips' => "Un flip est une rotation verticale. On distingue les front flips, rotations en avant, et les back flips, rotations en arrière.
 
                         Il est possible de faire plusieurs flips à la suite, et d'ajouter un grab à la rotation.
 
                         Les flips agrémentés d'une vrille existent aussi (Mac Twist, Hakon Flip, ...), mais de manière beaucoup plus rare, et se confondent souvent avec certaines rotations horizontales désaxées.
 
-                        Néanmoins, en dépit de la difficulté technique relative d'une telle figure, le danger de retomber sur la tête ou la nuque est réel et conduit certaines stations de ski à interdire de telles figures dans ses snowparks."
-            , 
+                        Néanmoins, en dépit de la difficulté technique relative d'une telle figure, le danger de retomber sur la tête ou la nuque est réel et conduit certaines stations de ski à interdire de telles figures dans ses snowparks.",
             'Rotations désaxées' => "Une rotation désaxée est une rotation initialement horizontale mais lancée avec un mouvement des épaules particulier qui désaxe la rotation. Il existe différents types de rotations désaxées (corkscrew ou cork, rodeo, misty, etc.) en fonction de la manière dont est lancé le buste. Certaines de ces rotations, bien qu'initialement horizontales, font passer la tête en bas.
 
                         Bien que certaines de ces rotations soient plus faciles à faire sur un certain nombre de tours (ou de demi-tours) que d'autres, il est en théorie possible de d'attérir n'importe quelle rotation désaxée avec n'importe quel nombre de tours, en jouant sur la quantité de désaxage afin de se retrouver à la position verticale au moment voulu.
 
-            Il est également possible d'agrémenter une rotation désaxée par un grab."
-            , 
+            Il est également possible d'agrémenter une rotation désaxée par un grab.",
             'Slides' => "Un slide consiste à glisser sur une barre de slide. Le slide se fait soit avec la planche dans l'axe de la barre, soit perpendiculaire, soit plus ou  moins désaxé.
 
-                        On peut slider avec la planche centrée par rapport à la barre (celle-ci se situe approximativement au-dessous des pieds du rideur), mais aussi en nose slide, c'est-à-dire l'avant de la planche sur la barre, ou en tail slide, l'arrière de la planche sur la barre."
-            , 
-            'One foot tricks' => "Figures réalisée avec un pied décroché de la fixation, afin de tendre la jambe correspondante pour mettre en évidence le fait que le pied n'est pas fixé. Ce type de figure est extrêmement dangereuse pour les ligaments du genou en cas de mauvaise réception."
-            , 
+                        On peut slider avec la planche centrée par rapport à la barre (celle-ci se situe approximativement au-dessous des pieds du rideur), mais aussi en nose slide, c'est-à-dire l'avant de la planche sur la barre, ou en tail slide, l'arrière de la planche sur la barre.",
+            'One foot tricks' => "Figures réalisée avec un pied décroché de la fixation, afin de tendre la jambe correspondante pour mettre en évidence le fait que le pied n'est pas fixé. Ce type de figure est extrêmement dangereuse pour les ligaments du genou en cas de mauvaise réception.",
             'Old schools' => "Le terme old school désigne un style de freestyle caractérisée par en ensemble de figure et une manière de réaliser des figures passée de mode, qui fait penser au freestyle des années 1980 - début 1990 (par opposition à new school) :
 
             figures désuètes : Japan air, rocket air, ...
@@ -128,20 +122,18 @@ class AppFixtures extends Fixture
             'https://youtu.be/9sVe_IiXD3A',
             'https://youtu.be/orD3GNRTJAc',
             'https://youtu.be/LSVn5aI56aU'
-        ]; 
+        ];
 
         $categoriesList = [];
-        
+
         foreach ($categories as $name => $description) {
             $category = new Category();
             $category->setName($name)
-                     ->setDescription($description);
-                     
+                ->setDescription($description);
             $manager->persist($category);
             $categoriesList[] = $category;
         }
 
-        
         $users = [];
 
         for ($k = 1; $k <= 5; $k++) {
@@ -152,16 +144,13 @@ class AppFixtures extends Fixture
             $email = $faker->email;
             $passwordHash = $this->encoder->encodePassword($user, 'password');
             $avatar = 'image(' . $k . ').jpeg';
-
             $user->setFirstName($firstName)
                 ->setLastName($lastName)
                 ->setEmail($email)
                 ->setLoginName($loginName)
                 ->setPasswordHash($passwordHash)
                 ->setIsActive(true)
-                ->setAvatar($avatar)
-                ;
-            
+                ->setAvatar($avatar);
             $manager->persist($user);
             $users[] = $user;
         }
@@ -172,43 +161,38 @@ class AppFixtures extends Fixture
             $description = $tricksDescriptions[$i];
             $imageMain = $tricksImagesMain[$i];
             // $categoryNumber = mt_rand(0, 7);
-            
             $trick->setName($name)
-            ->setDescription($description)
-            ->setImageMain($imageMain)
-            ->setCategory($faker->randomElement($categoriesList))
-            ->setCreatedAt(new \DateTime())
-            ->setUser($faker->randomElement($users));
-        
+                ->setDescription($description)
+                ->setImageMain($imageMain)
+                ->setCategory($faker->randomElement($categoriesList))
+                ->setCreatedAt(new \DateTime())
+                ->setUser($faker->randomElement($users));
+
             for ($j = 1; $j <= rand(1, 3); $j++) {
                 $image = new Image();
                 $image->setFilename('tricksimage(' . rand(1, 33) . ').jpg')
-                ->setTrick($trick);
-                
+                    ->setTrick($trick);
                 $manager->persist($image);
             }
 
-            for ($l = 1; $l <= mt_rand(10,20); $l++) {
+            for ($l = 1; $l <= mt_rand(10, 20); $l++) {
                 $comment = new Comment();
                 $comment->setContent($faker->paragraph())
-                ->setUser($faker->randomElement($users))
-                ->setTrick($trick);
-
+                    ->setUser($faker->randomElement($users))
+                    ->setTrick($trick);
                 $manager->persist($comment);
             }
 
-
             for ($m = 1; $m <= rand(1, 2); $m++) {
                 $video = new Video();
-                $video->setUrl($videosList[rand(0,3)])
+                $video->setUrl($videosList[rand(0, 3)])
                     ->setTrick($trick);
-
                 $manager->persist($video);
             }
 
-        $manager->persist($trick);
+            $manager->persist($trick);
         }
 
-    $manager->flush();
+        $manager->flush();
     }
 }

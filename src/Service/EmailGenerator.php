@@ -17,8 +17,8 @@ class EmailGenerator
 
     /**
      * Create and send email functionnality
-    */
-    public function createEmail(MailerInterface $mailer,$user, $template)
+     */
+    public function createEmail(MailerInterface $mailer, $user, $template)
     {
         // Subject deducting of the template
         $subject = ($template == self::VALIDATION_ACCOUNT) ? 'Activation de votre compte sur SnonwTricks' : 'Modification du mot de passe sur SnowTricks';
@@ -32,7 +32,6 @@ class EmailGenerator
             ->context([
                 'user' => $user
             ]);
- 
         $mailer->send($email);
     }
 }

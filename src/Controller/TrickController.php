@@ -29,9 +29,9 @@ class TrickController extends AbstractController
      */
     public function index(TrickRepository $repo)
     {
-        $tricks = $repo->findBy([],[
+        $tricks = $repo->findBy([], [
             'createdAt' => 'DESC'
-            ]);
+        ]);
 
         return $this->render('trick/index.html.twig', [
             'tricks' => $tricks
@@ -66,18 +66,20 @@ class TrickController extends AbstractController
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $comment->setCreatedAt(new \DateTime());
             $comment->setUser($this->getUser());
             $comment->setTrick($trick);
-
             $manager->persist($comment);
             $manager->flush();
 
-            return $this->redirectToRoute('trick_show',
-             ['slug' => $slug]
+            return $this->redirectToRoute(
+                'trick_show',
+                ['slug' => $slug]
             );
         }
+
         return $this->render('trick/show.html.twig', [
             'trick' => $trick,
             'form'  => $form->createView()
@@ -92,6 +94,7 @@ class TrickController extends AbstractController
     public function moreComments(TrickRepository $repo, $slug, $start = 10)
     {
         $trick = $repo->findOneBySlug($slug);
+
         return $this->render('trick/moreComments.html.twig', [
             'trick' => $trick,
             'start' => $start
@@ -113,6 +116,7 @@ class TrickController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $imageMainFile */
             $uploadedFile = $form->get('imageMainFile')->getData();
+
             if ($uploadedFile) {
                 // ImageUploadManager service which renames and saves trick imageMain in the good path
                 $filename = $imageUploadManager->imageSave($uploadedFile, ImageUploadManager::IMAGE_DIRECTORY);
@@ -122,7 +126,6 @@ class TrickController extends AbstractController
             foreach ($trick->getVideos() as $video) {
                 if ($video) {
                     $video->setTrick($trick);
-
                     $manager->persist($video);
                 }
             }
@@ -133,28 +136,28 @@ class TrickController extends AbstractController
                     $filename = $imageUploadManager->imageSave($image->getImageFile(), ImageUploadManager::IMAGE_DIRECTORY);
                     $image->setFilename($filename);
                     $image->setTrick($trick);
-
                     $manager->persist($image);
                 }
             }
 
             $trick->setUser($this->getUser());
-    
             $manager->persist($trick);
             $manager->flush();
-
             $this->addFlash(
                 'success',
                 'Le trick ' . $trick->getName() . ' a été enregistré avec succès !'
             );
+
             return $this->redirectToRoute('homepage');
         }
+
         if ($form->isSubmitted() && !$form->isValid()) {
             $this->addFlash(
                 'danger',
                 'La création du trick a échoué !'
             );
         }
+
         return $this->render('trick/create.html.twig', [
             'form' => $form->createView()
         ]);
@@ -171,13 +174,14 @@ class TrickController extends AbstractController
         // Save the imageMain file name in $imageMain variable and add the complet file path of the imageMain file.
         // Its necessary to make form working.
         $imageMain = $trick->getImageMain();
+
         if ($imageMain !== null) {
             $trick->setImageMain(new File($this->getParameter('image_directory') . '/' . $imageMain));
         }
-     
+
         $form = $this->createForm(TrickType::class, $trick);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Symfony\Component\HttpFoundation\File\UploadedFile $uploadedFile*/
             $uploadedFile = $form->get('imageMainFile')->getData();
@@ -201,7 +205,7 @@ class TrickController extends AbstractController
             $uploadedCollection = $form->get('images')->getData();
             foreach ($uploadedCollection as $image) {
                 if ($image->getImageFile()) {
-                   // ImageUploadManager service which renames and saves trick images
+                    // ImageUploadManager service which renames and saves trick images
                     $filename = $imageUploadManager->imageSave($image->getImageFile(), ImageUploadManager::IMAGE_DIRECTORY);
                     $image->setFilename($filename);
                     $image->setTrick($trick);
@@ -210,22 +214,23 @@ class TrickController extends AbstractController
             }
 
             $trick->setUser($this->getUser());
-
             $manager->persist($trick);
             $manager->flush();
-
             $this->addFlash(
                 'success',
                 'Le trick ' . $trick->getName() . ' a été modifié avec succès !'
             );
+
             return $this->redirectToRoute('homepage');
         }
+
         if ($form->isSubmitted() && !$form->isValid()) {
             $this->addFlash(
                 'danger',
                 'La modification du trick a échoué !'
             );
         }
+
         return $this->render('trick/edit.html.twig', [
             'form' => $form->createView(),
             'trick' => $trick,
@@ -241,15 +246,14 @@ class TrickController extends AbstractController
      */
     public function delete(Trick $trick, EntityManagerInterface $manager)
     {
-            $manager->remove($trick);
-            $manager->flush();
+        $manager->remove($trick);
+        $manager->flush();
+        $this->addFlash(
+            "success",
+            "Le trick a bien été supprimé"
+        );
 
-            $this->addFlash(
-                "success",
-                "Le trick a bien été supprimé"
-            );
-
-            return $this->redirectToRoute('homepage');
+        return $this->redirectToRoute('homepage');
     }
 
     /**

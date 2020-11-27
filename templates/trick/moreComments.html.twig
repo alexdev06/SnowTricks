@@ -1,11 +1,20 @@
 {% for comment in trick.comments | slice(start, 10) %}
     <div class="row justify-content-md-center">
         <div class="media col-md-8">
-            <img src="/uploads/avatars/{{ comment.user.avatar }}" class="avatar-image align-self-center mr-3" alt="Avatar de {{ comment.user.loginName }}">
-            <div class="media-body border p-2 my-2">
+            {% if loop.index is odd %}
+            <div class="avatar-box align-self-center mr-3">
+                <img src="/uploads/avatars/{{ comment.user.avatar }}" class="avatar-image rounded-circle" alt="Avatar de {{ comment.user.loginName }}">
+            </div>
+            {% endif %}
+            <div class="media-body comment-box border p-2 my-2">
                 <em class="mt-0"><strong>{{ comment.user.fullName }}</strong> le {{ comment.createdAt | date('d/m/Y à H:i') }} :</em>
                 <blockquote>{{ comment.content }}</blockquote>
             </div>
+            {% if loop.index is even %}
+            <div class="avatar-box align-self-center ml-3">
+                <img src="/uploads/avatars/{{ comment.user.avatar }}" class="avatar-image rounded-circle" alt="Avatar de {{ comment.user.loginName }}">
+            </div>
+            {% endif %}
         </div>
     </div>
 {% endfor %}

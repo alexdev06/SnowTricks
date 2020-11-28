@@ -6,7 +6,7 @@
                 <img src="/uploads/avatars/{{ comment.user.avatar }}" class="avatar-image rounded-circle" alt="Avatar de {{ comment.user.loginName }}">
             </div>
             {% endif %}
-            <div class="media-body comment-box border p-2 my-2">
+            <div class="media-body comment-box border p-2 my-3">
                 <em class="mt-0"><strong>{{ comment.user.fullName }}</strong> le {{ comment.createdAt | date('d/m/Y à H:i') }} :</em>
                 <blockquote>{{ comment.content }}</blockquote>
             </div>

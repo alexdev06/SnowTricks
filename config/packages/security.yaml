@@ -1,10 +1,10 @@
 security:
     encoders:
         App\Entity\User:
-            algorithm: bcrypt
+            algorithm: auto
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory: { memory: null }
+        user_in_memory: { memory: null }
         in_database:
             entity:
                 class: App\Entity\User

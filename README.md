@@ -6,7 +6,7 @@
 ### Lien vers le site : https://snowtricks.alexandremanteaux.fr
 
 ## Bibliothèques utilisées:
-- Symfony 5.1.8
+- Symfony 5.2
 - Jquery 3.4.1
 - Bootstrap 4.4.1
 - Thème Boostrap "Bootswatch Litera"
